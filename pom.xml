@@ -1,6 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.jboss.arquillian.container</groupId>
+		<artifactId>arquillian-parent-gae</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
 	<groupId>com.textquo.dreamcode</groupId>
 	<artifactId>dreamcode</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -395,69 +401,37 @@
 			</build>
 		</profile>
 		<profile>
-			<id>jetty</id>
+			<id>gae-embedded</id>
 			<dependencies>
 
 				<dependency>
 					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-jetty-common</artifactId>
-					<version>1.0.0.CR2</version>
+					<artifactId>arquillian-gae-common</artifactId>
 				</dependency>
 
-				<!-- org.jboss.arquillian -->
+				<dependency>
+					<groupId>com.google.appengine</groupId>
+					<artifactId>appengine-tools-sdk</artifactId>
+				</dependency>
+				<dependency>
+					<groupId>com.google.appengine</groupId>
+					<artifactId>appengine-api-1.0-sdk</artifactId>
+				</dependency>
+
 				<dependency>
 					<groupId>org.jboss.arquillian.container</groupId>
 					<artifactId>arquillian-container-spi</artifactId>
 				</dependency>
-				<dependency>
-					<groupId>org.jboss.arquillian.container</groupId>
-					<artifactId>arquillian-container-test-spi</artifactId>
-				</dependency>
+
 				<dependency>
 					<groupId>org.jboss.arquillian.protocol</groupId>
-					<artifactId>arquillian-protocol-servlet</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.arquillian.testenricher</groupId>
-					<artifactId>arquillian-testenricher-cdi</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.arquillian.testenricher</groupId>
-					<artifactId>arquillian-testenricher-resource</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.arquillian.testenricher</groupId>
-					<artifactId>arquillian-testenricher-initialcontext</artifactId>
+					<artifactId>arquillian-protocol-modules</artifactId>
 				</dependency>
 
 				<dependency>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-webapp</artifactId>
-					<version>${version.jetty}</version>
-					<scope>provided</scope>
-				</dependency>
-
-				<dependency>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-deploy</artifactId>
-					<version>${version.jetty}</version>
-					<scope>provided</scope>
-				</dependency>
-
-				<dependency>
-					<!-- Jetty annotations needed for Servlet 3.1 support -->
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-annotations</artifactId>
-					<version>${version.jetty}</version>
-					<scope>provided</scope>
-				</dependency>
-
-				<dependency>
-					<!-- Jetty plus and naming required for testing resource injections -->
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-plus</artifactId>
-					<version>${version.jetty}</version>
-					<scope>provided</scope>
+					<groupId>org.kohsuke.metainf-services</groupId>
+					<artifactId>metainf-services</artifactId>
+					<optional>true</optional>
 				</dependency>
 
 				<dependency>
@@ -466,54 +440,39 @@
 					<scope>test</scope>
 				</dependency>
 
-				<!--<dependency>-->
-					<!--<groupId>junit</groupId>-->
-					<!--<artifactId>junit</artifactId>-->
-				<!--</dependency>-->
-
 				<dependency>
-					<groupId>javax.enterprise</groupId>
-					<artifactId>cdi-api</artifactId>
-					<version>1.0-SP4</version>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+					<scope>test</scope>
 				</dependency>
-
-				<!-- Weld servlet required for testing CDI injections -->
 
 				<dependency>
 					<groupId>org.glassfish.web</groupId>
 					<artifactId>el-impl</artifactId>
-					<version>2.2</version>
+					<scope>test</scope>
 				</dependency>
-				<!--<dependency>-->
-					<!--<groupId>javax.servlet.jsp</groupId>-->
-					<!--<artifactId>jsp-api</artifactId>-->
-				<!--</dependency>-->
-				<!--<dependency>-->
-					<!--<groupId>com.h2database</groupId>-->
-					<!--<artifactId>h2</artifactId>-->
-				<!--</dependency>-->
 
 				<dependency>
-					<groupId>org.jboss.shrinkwrap.resolver</groupId>
-					<artifactId>shrinkwrap-resolver-depchain</artifactId>
-					<type>pom</type>
+					<groupId>javax.servlet.jsp</groupId>
+					<artifactId>jsp-api</artifactId>
+					<scope>test</scope>
+				</dependency>
+
+				<dependency>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+					<scope>test</scope>
+				</dependency>
+
+				<dependency>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+					<scope>test</scope>
 				</dependency>
 
 				<dependency>
 					<groupId>org.jboss.shrinkwrap.resolver</groupId>
 					<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-					<scope>test</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.jboss.shrinkwrap.descriptors</groupId>
-					<artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
-					<scope>test</scope>
-				</dependency>
-
-				<dependency>
-					<groupId>org.jboss.weld.servlet</groupId>
-					<artifactId>weld-servlet</artifactId>
-					<scope>test</scope>
 				</dependency>
 
 			</dependencies>
