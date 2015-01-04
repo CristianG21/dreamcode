@@ -1,20 +1,30 @@
 package com.textquo.dreamcode.client;
 
-import com.google.gwt.junit.client.GWTTestCase;
-import junit.framework.Assert;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.gwt.RunAsGwtClient;
+import org.jboss.arquillian.gwt.client.ArquillianGwtTestCase;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class DreamcodeTest extends GWTTestCase {
-    @Override
-    public String getModuleName() {
-        return "com.textquo.dreamcode.Dreamcode";
+import java.io.File;
+
+@RunWith(Arquillian.class)
+public class DreamcodeTest extends ArquillianGwtTestCase {
+
+    @Deployment
+    public static WebArchive createDeployment() {
+        return ShrinkWrap.create(WebArchive.class, "test.war")
+//                .addClass(Greeter.class)
+//                .addClass(GreetingService.class)
+//                .addClass(GreetingServiceImpl.class)
+                .addAsWebInfResource(new File("src/main/webapp/WEB-INF/web.xml"));
     }
-    @Override
-    protected void gwtSetUp() throws Exception {
-    }
-    @Override
-    protected void gwtTearDown() throws Exception {
-    }
-    public void test(){
-        Assert.assertTrue(true);
+
+    @Test
+    @RunAsGwtClient(moduleName = "com.textquo.dreamcode.Dreamcode")
+    public void testAdd(){
     }
 }
