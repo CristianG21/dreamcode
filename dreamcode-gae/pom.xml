@@ -113,59 +113,6 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- Arquillian Testing -->
-		<!--<dependency>-->
-			<!--<groupId>org.jboss.arquillian.container</groupId>-->
-			<!--<artifactId>arquillian-gae-common</artifactId>-->
-			<!--&lt;!&ndash;<version>0.0.1-SNAPSHOT</version>&ndash;&gt;-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.jboss.arquillian.container</groupId>-->
-			<!--<artifactId>arquillian-container-spi</artifactId>-->
-			<!--&lt;!&ndash;<version>${version.arquillian}</version>&ndash;&gt;-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.jboss.arquillian.protocol</groupId>-->
-			<!--<artifactId>arquillian-protocol-modules</artifactId>-->
-			<!--&lt;!&ndash;<version>${version.arquillian}</version>&ndash;&gt;-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.kohsuke.metainf-services</groupId>-->
-			<!--<artifactId>metainf-services</artifactId>-->
-			<!--&lt;!&ndash;<version>${version.meta-inf}</version>&ndash;&gt;-->
-			<!--<optional>true</optional>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.jboss.arquillian.junit</groupId>-->
-			<!--<artifactId>arquillian-junit-container</artifactId>-->
-			<!--&lt;!&ndash;<version>${version.arquillian}</version>&ndash;&gt;-->
-			<!--<scope>test</scope>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.glassfish.web</groupId>-->
-			<!--<artifactId>el-impl</artifactId>-->
-			<!--&lt;!&ndash;<version>${version.glassfish.el}</version>&ndash;&gt;-->
-			<!--<scope>test</scope>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>javax.servlet.jsp</groupId>-->
-			<!--<artifactId>jsp-api</artifactId>-->
-			<!--&lt;!&ndash;<version>${version.jsp-api}</version>&ndash;&gt;-->
-			<!--<scope>test</scope>-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>com.h2database</groupId>-->
-			<!--<artifactId>h2</artifactId>-->
-			<!--<scope>test</scope>-->
-			<!--&lt;!&ndash;<version>${version.h2}</version>&ndash;&gt;-->
-		<!--</dependency>-->
-		<!--<dependency>-->
-			<!--<groupId>org.jboss.shrinkwrap.resolver</groupId>-->
-			<!--<artifactId>shrinkwrap-resolver-impl-maven</artifactId>-->
-			<!--&lt;!&ndash;<version>2.1.0</version>&ndash;&gt;-->
-			<!--<scope>compile</scope>-->
-		<!--</dependency>-->
 	</dependencies>
 
 	<profiles>
