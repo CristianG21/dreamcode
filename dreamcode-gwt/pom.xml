@@ -4,13 +4,13 @@
 	<parent>
 	    <groupId>com.textquo</groupId>
 	    <artifactId>dreamcode</artifactId>
-	    <version>0.0.1</version>
+	    <version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.textquo.dreamcode</groupId>
 	<artifactId>dreamcode-gwt</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 
 	<name>Dreamcode-GWT</name>
 	<description>GWT implementation of dreamcode</description>
@@ -35,10 +35,6 @@
 			<id>kerbymart</id>
 		</developer>
 	</developers>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<dependencies>
 		<!-- GWT -->
@@ -113,11 +109,11 @@
 			<artifactId>google-http-client-appengine</artifactId>
 			<version>1.19.0</version>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.2</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>junit</groupId>-->
+			<!--<artifactId>junit</artifactId>-->
+			<!--<version>3.8.2</version>-->
+		<!--</dependency>-->
 	</dependencies>
 
 	<build>
@@ -160,7 +156,7 @@
 					<!--<logLevel>DEBUG</logLevel>-->
 					<!--&lt;!&ndash;<logLevel>WARN</logLevel>&ndash;&gt;-->
 					<!--<runTarget>index.html</runTarget>-->
-					<!--<appEngineVersion>${gae.version}</appEngineVersion>-->
+					<!--<appEngineVersion>${version.appengine}</appEngineVersion>-->
 					<!--&lt;!&ndash; tell the gwt plugin that the webapp source resides in src/main/webapp &ndash;&gt;-->
 					<!--<webappDirectory>${webappDirectory}</webappDirectory>-->
 					<!--&lt;!&ndash; tell the gwt plugin that dev mode should be run using the webapp that resides in target/${webappDirectory} &ndash;&gt;-->

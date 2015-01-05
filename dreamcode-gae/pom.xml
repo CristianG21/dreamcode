@@ -5,13 +5,13 @@
 	<parent>
 	    <groupId>com.textquo</groupId>
 	    <artifactId>dreamcode</artifactId>
-	    <version>0.0.1</version>
+	    <version>1.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.textquo.dreamcode</groupId>
 	<artifactId>dreamcode-gae</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 
 	<name>Dreamcode-GAE</name>
 	<description>GAE implementation of dreamcode</description>
@@ -23,19 +23,19 @@
 			<!-- this library provides the core appengine features -->
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
-			<version>${gae.version}</version>
+			<version>${version.appengine}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-labs</artifactId>
-			<version>${gae.version}</version>
+			<version>${version.appengine}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-tools-sdk</artifactId>
-			<version>${gae.version}</version>
+			<version>${version.appengine}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -89,35 +89,68 @@
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-stubs</artifactId>
-			<version>${gae.version}</version>
+			<version>${version.appengine}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-testing</artifactId>
-			<version>${gae.version}</version>
+			<version>${version.appengine}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Arquillian Testing -->
+		<dependency>
+			<groupId>org.jboss.arquillian.container</groupId>
+			<artifactId>arquillian-gae-common</artifactId>
+			<!--<version>0.0.1-SNAPSHOT</version>-->
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.container</groupId>
+			<artifactId>arquillian-container-spi</artifactId>
+			<!--<version>${version.arquillian}</version>-->
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.protocol</groupId>
+			<artifactId>arquillian-protocol-modules</artifactId>
+			<!--<version>${version.arquillian}</version>-->
+		</dependency>
+		<dependency>
+			<groupId>org.kohsuke.metainf-services</groupId>
+			<artifactId>metainf-services</artifactId>
+			<!--<version>${version.meta-inf}</version>-->
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.junit</groupId>
+			<artifactId>arquillian-junit-container</artifactId>
+			<!--<version>${version.arquillian}</version>-->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.2</version>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>el-impl</artifactId>
+			<!--<version>${version.glassfish.el}</version>-->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<!--<version>${version.jsp-api}</version>-->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+			<!--<version>${version.h2}</version>-->
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+			<!--<version>2.1.0</version>-->
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
-
-	<repositories>
-		<repository>
-			<id>maven-restlet</id>
-			<name>Public online Restlet repository</name>
-			<url>http://maven.restlet.com</url>
-		</repository>
-		<!-- Snapshot repository -->
-		<repository>
-			<id>oss-jfrog-artifactory-snapshots</id>
-			<name>oss-jfrog-artifactory-snapshots</name>
-			<url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url>
-		</repository>
-	</repositories>
 
 	<build>
 		<outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
@@ -143,7 +176,7 @@
 			<plugin>
 				<groupId>com.google.appengine</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
-				<version>${gae.version}</version>
+				<version>${version.appengine}</version>
 				<configuration>
 					<fullScanSeconds>1</fullScanSeconds>
 				</configuration>
