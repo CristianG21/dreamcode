@@ -79,7 +79,6 @@ public class AppEngineEmbeddedClientTestCase {
     @OperateOnDeployment("default")
     public void shouldBeAbleToInvokeServletInDeployedWebApp() throws Exception {
         String body = readAllAndClose(new URL("http://localhost:8080/test").openStream());
-        System.out.println("HOOOOORAYYY!!!!!!!!!!");
         Assert.assertEquals(
                 "Verify that the servlet was deployed and returns expected result",
                 TestServlet.MESSAGE,
