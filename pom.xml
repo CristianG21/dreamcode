@@ -24,21 +24,17 @@
     </modules>
 
     <properties>
+        <!-- GWT -->
         <gwt.version>2.7.0</gwt.version>
-        <!-- minimum version known to work with tests (minimum recommended version) -->
-        <version.arquillian>1.1.5.Final</version.arquillian>
+        <!-- GAE -->
         <version.appengine>1.9.17a</version.appengine>
-        <version.cdi-api>1.0</version.cdi-api>
-        <version.meta-inf>1.1</version.meta-inf>
-        <version.glassfish.el>2.2</version.glassfish.el>
-        <version.servlet-api>2.5</version.servlet-api>
-        <version.jsp-api>2.2</version.jsp-api>
-        <version.h2>1.2.138</version.h2>
-        <version.junit>4.8.1</version.junit>
-        <version.surefire.plugin>2.12.1</version.surefire.plugin>
-        <version.oauth-client-appengine>1.15.0-rc</version.oauth-client-appengine>
-        <version.dmr>1.2.0.Final</version.dmr>
-        <appengine.sdk.root>/home/kmartino/appengine-java-sdk-1.9.17</appengine.sdk.root>
+        <version.com.google.gae.api>1.9.17a</version.com.google.gae.api>
+        <!-- Testing -->
+        <version.javax.servlet>2.5</version.javax.servlet>
+        <version.junit>4.11</version.junit>
+        <version.arquillian>1.1.5.Final</version.arquillian>
+        <version.arquillian.gae>1.0.0.Beta10</version.arquillian.gae>
+        <version.org.jboss.arquillian.graphene2>2.0.3.Final</version.org.jboss.arquillian.graphene2>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -106,85 +102,47 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.jboss.arquillian.protocol</groupId>
-                <artifactId>arquillian-protocol-modules</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
-            <dependency>
-                <groupId>org.jboss.arquillian.container</groupId>
-                <artifactId>arquillian-gae-common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.jboss.arquillian.container</groupId>
-                <artifactId>arquillian-gae-cli</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-tools-sdk</artifactId>
-                <version>${version.appengine}</version>
-            </dependency>
-
+            <!-- GAE API -->
             <dependency>
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-api-1.0-sdk</artifactId>
-                <version>${version.appengine}</version>
+                <version>${version.com.google.gae.api}</version>
             </dependency>
-
+            <!-- GAE Tools -->
             <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>${version.cdi-api}</version>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-tools-sdk</artifactId>
+                <version>${version.com.google.gae.api}</version>
+                <scope>test</scope>
             </dependency>
-
             <dependency>
-                <groupId>org.kohsuke.metainf-services</groupId>
-                <artifactId>metainf-services</artifactId>
-                <version>${version.meta-inf}</version>
-                <optional>true</optional>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-endpoints</artifactId>
+                <version>${version.com.google.gae.api}</version>
             </dependency>
-
             <dependency>
-                <groupId>org.jboss</groupId>
-                <artifactId>jboss-dmr</artifactId>
-                <version>${version.dmr}</version>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-api-labs</artifactId>
+                <version>${version.com.google.gae.api}</version>
             </dependency>
-
+            <!-- Testing -->
+            <dependency>
+                <groupId>org.jboss.arquillian.graphene</groupId>
+                <artifactId>graphene-webdriver</artifactId>
+                <version>${version.org.jboss.arquillian.graphene2}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${version.javax.servlet}</version>
+            </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${version.junit}</version>
-                <scope>test</scope>
             </dependency>
-
-            <dependency>
-                <groupId>org.glassfish.web</groupId>
-                <artifactId>el-impl</artifactId>
-                <version>${version.glassfish.el}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.servlet.jsp</groupId>
-                <artifactId>jsp-api</artifactId>
-                <version>${version.jsp-api}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>${version.servlet-api}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <!-- ARQ -->
-
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
@@ -192,18 +150,16 @@
                 <scope>import</scope>
                 <version>${version.arquillian}</version>
             </dependency>
-
             <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>${version.h2}</version>
-                <scope>test</scope>
+                <groupId>org.jboss.arquillian.protocol</groupId>
+                <artifactId>arquillian-protocol-modules</artifactId>
+                <version>${version.arquillian.gae}</version>
             </dependency>
-
             <dependency>
-                <groupId>com.google.oauth-client</groupId>
-                <artifactId>google-oauth-client-appengine</artifactId>
-                <version>${version.oauth-client-appengine}</version>
+                <groupId>org.jboss.arquillian.container</groupId>
+                <artifactId>arquillian-gae-local</artifactId>
+                <version>${version.arquillian.gae}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

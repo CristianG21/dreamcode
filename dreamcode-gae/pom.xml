@@ -100,57 +100,114 @@
 		</dependency>
 		<!-- Arquillian Testing -->
 		<dependency>
-			<groupId>org.jboss.arquillian.container</groupId>
-			<artifactId>arquillian-gae-common</artifactId>
-			<!--<version>0.0.1-SNAPSHOT</version>-->
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.container</groupId>
-			<artifactId>arquillian-container-spi</artifactId>
-			<!--<version>${version.arquillian}</version>-->
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.protocol</groupId>
-			<artifactId>arquillian-protocol-modules</artifactId>
-			<!--<version>${version.arquillian}</version>-->
-		</dependency>
-		<dependency>
-			<groupId>org.kohsuke.metainf-services</groupId>
-			<artifactId>metainf-services</artifactId>
-			<!--<version>${version.meta-inf}</version>-->
-			<optional>true</optional>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-api-1.0-sdk</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
-			<!--<version>${version.arquillian}</version>-->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.glassfish.web</groupId>
-			<artifactId>el-impl</artifactId>
-			<!--<version>${version.glassfish.el}</version>-->
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<!--<version>${version.jsp-api}</version>-->
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
-			<!--<version>${version.h2}</version>-->
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.shrinkwrap.resolver</groupId>
-			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-			<!--<version>2.1.0</version>-->
-			<scope>compile</scope>
-		</dependency>
+
+		<!-- Arquillian Testing -->
+		<!--<dependency>-->
+			<!--<groupId>org.jboss.arquillian.container</groupId>-->
+			<!--<artifactId>arquillian-gae-common</artifactId>-->
+			<!--&lt;!&ndash;<version>0.0.1-SNAPSHOT</version>&ndash;&gt;-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.jboss.arquillian.container</groupId>-->
+			<!--<artifactId>arquillian-container-spi</artifactId>-->
+			<!--&lt;!&ndash;<version>${version.arquillian}</version>&ndash;&gt;-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.jboss.arquillian.protocol</groupId>-->
+			<!--<artifactId>arquillian-protocol-modules</artifactId>-->
+			<!--&lt;!&ndash;<version>${version.arquillian}</version>&ndash;&gt;-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.kohsuke.metainf-services</groupId>-->
+			<!--<artifactId>metainf-services</artifactId>-->
+			<!--&lt;!&ndash;<version>${version.meta-inf}</version>&ndash;&gt;-->
+			<!--<optional>true</optional>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.jboss.arquillian.junit</groupId>-->
+			<!--<artifactId>arquillian-junit-container</artifactId>-->
+			<!--&lt;!&ndash;<version>${version.arquillian}</version>&ndash;&gt;-->
+			<!--<scope>test</scope>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.glassfish.web</groupId>-->
+			<!--<artifactId>el-impl</artifactId>-->
+			<!--&lt;!&ndash;<version>${version.glassfish.el}</version>&ndash;&gt;-->
+			<!--<scope>test</scope>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>javax.servlet.jsp</groupId>-->
+			<!--<artifactId>jsp-api</artifactId>-->
+			<!--&lt;!&ndash;<version>${version.jsp-api}</version>&ndash;&gt;-->
+			<!--<scope>test</scope>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>com.h2database</groupId>-->
+			<!--<artifactId>h2</artifactId>-->
+			<!--<scope>test</scope>-->
+			<!--&lt;!&ndash;<version>${version.h2}</version>&ndash;&gt;-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.jboss.shrinkwrap.resolver</groupId>-->
+			<!--<artifactId>shrinkwrap-resolver-impl-maven</artifactId>-->
+			<!--&lt;!&ndash;<version>2.1.0</version>&ndash;&gt;-->
+			<!--<scope>compile</scope>-->
+		<!--</dependency>-->
 	</dependencies>
+
+	<profiles>
+		<!-- GAE -->
+		<profile>
+			<id>sdk</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>sdk</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<redirectTestOutputToFile>true</redirectTestOutputToFile>
+							<includes>
+								<include>com/textquo/**/*Test.java</include>
+							</includes>
+							<systemProperties>
+								<appengine.test.datastore.default_high_rep_job_policy_unapplied_job_pct>20</appengine.test.datastore.default_high_rep_job_policy_unapplied_job_pct>
+							</systemProperties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<dependencies>
+				<!--<dependency>-->
+					<!--<groupId>com.google.appengine.tck</groupId>-->
+					<!--<artifactId>sdk-env</artifactId>-->
+				<!--</dependency>-->
+				<dependency>
+					<groupId>org.jboss.arquillian.container</groupId>
+					<artifactId>arquillian-gae-local</artifactId>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 	<build>
 		<outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>

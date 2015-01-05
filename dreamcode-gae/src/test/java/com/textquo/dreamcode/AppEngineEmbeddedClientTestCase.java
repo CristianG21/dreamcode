@@ -42,7 +42,6 @@
  */
 package com.textquo.dreamcode;
 
-import junit.framework.Assert;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -51,7 +50,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import org.junit.Assert;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
@@ -80,7 +79,7 @@ public class AppEngineEmbeddedClientTestCase {
     @OperateOnDeployment("default")
     public void shouldBeAbleToInvokeServletInDeployedWebApp() throws Exception {
         String body = readAllAndClose(new URL("http://localhost:8080/test").openStream());
-
+        System.out.println("HOOOOORAYYY!!!!!!!!!!");
         Assert.assertEquals(
                 "Verify that the servlet was deployed and returns expected result",
                 TestServlet.MESSAGE,
