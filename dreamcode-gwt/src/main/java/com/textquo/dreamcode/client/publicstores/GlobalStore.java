@@ -100,6 +100,12 @@ public class GlobalStore {
 //        }
     }
 
+    /**
+     *
+     * @param type
+     * @param id
+     * @param callback
+     */
     public void find(String type, String id, final DreamcodeCallback callback){
         final ClientResource resource = new ClientResource(Routes.DREAMCODE_API + Routes.PUBLIC_STORE_API);
         resource.setOnResponse(new Uniform() {

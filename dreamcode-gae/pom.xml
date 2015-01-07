@@ -84,6 +84,7 @@
 			<groupId>com.textquo</groupId>
 			<artifactId>twist</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
@@ -112,6 +113,14 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-depchain</artifactId>
+			<!--<version>${version.shrinkwrap.resolvers}</version>-->
+			<version>2.2.0-beta-1</version>
+			<scope>test</scope>
+			<type>pom</type>
 		</dependency>
 	</dependencies>
 

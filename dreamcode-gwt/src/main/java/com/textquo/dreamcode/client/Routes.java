@@ -28,7 +28,7 @@ public class Routes {
     public static String STORES_API         = "/stores";
     public static String PUBLIC_STORE_API  = "/publicstore";
     public static String PUBLIC_STORES_API  = "/publicstores";
-    public static String SHARES_API         = "/shares";
+    public static String SHARES_API         = "/share";
     public static String TASKS_API          = "/tasks";
     public static String PAYMENST_API       = "/payments";
 }

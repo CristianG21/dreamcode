@@ -24,6 +24,8 @@ package com.textquo.dreamcode.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.textquo.dreamcode.client.publicstores.GlobalStore;
+import com.textquo.dreamcode.client.shares.Share;
+import com.textquo.dreamcode.client.shares.Shares;
 import com.textquo.dreamcode.client.stores.Store;
 
 public class Dreamcode {
@@ -48,9 +50,18 @@ public class Dreamcode {
         return new Store();
     }
 
-    public GlobalStore globalStore(){
+    public GlobalStore globalStore() {
         // TODO: Return injected instance instead
         return new GlobalStore();
+    }
+
+    public Shares share(){
+        return new Shares();
+    }
+
+    public Share share(String shareId){
+        // TODO: Get share from STACK
+        return new Share();
     }
 
 }

@@ -21,6 +21,7 @@
  */
 package com.textquo.dreamcode.client.stores;
 
+import com.textquo.dreamcode.client.DreamObject;
 import com.textquo.dreamcode.client.DreamcodeCallback;
 import com.textquo.dreamcode.client.Routes;
 import com.textquo.dreamcode.client.utils.JsonHelper;
@@ -28,29 +29,48 @@ import org.restlet.client.Request;
 import org.restlet.client.Response;
 import org.restlet.client.Uniform;
 import org.restlet.client.resource.ClientResource;
+import no.eirikb.gwtchannelapi.client.Channel;
 
 import java.util.Map;
 
 public class Store {
 
-    public Store(){}
-
-    public void add(String type, Map<String,Object> attributes, final DreamcodeCallback callback){
-//        final ClientResource resource = new ClientResource(Routes.DREAMCODE_API + Routes.STORES_API);
-//        resource.setOnResponse(new Uniform() {
-//            //@Override
-//            public void handle(Request request, Response response) {
-//                try {
-//                    Map<String,String> res = JsonHelper.toMap(response.getEntity().getText());
-//                    callback.success(res);
-//                } catch (Exception e){
-//                    e.printStackTrace();
-//                    callback.failure(e, new Throwable(e.getMessage()));
-//                }
-//            }
-//        });
-//        resource.get();
+    public Store(){
     }
 
+    public void add(String type, String id, Object dreamObject, final DreamcodeCallback callback){
+
+    }
+
+    public void add(String type, Object dreamObject, final DreamcodeCallback callback){
+
+    }
+
+    public Find find(String type, String id){
+        return new Find(this, type);
+    }
+
+    public Find find(String type, String id, DreamcodeCallback callback){
+        return new Find(this, type);
+    }
+
+    public FindAll findAll(String type){
+        return new FindAll(this, type);
+    }
+
+    public FindAll findAll(String type, DreamcodeCallback callback){
+        return new FindAll(this, type);
+    }
+
+    public FindAll findAll(DreamcodeCallback callback){
+        return new FindAll(this);
+    }
+
+    public void update(String type, String id, DreamObject update, DreamcodeCallback callback){}
+
+    public void remove(String type, String id, DreamcodeCallback callback){}
+
+    public void on(String event, DreamcodeCallback callback){
+    }
 
 }
