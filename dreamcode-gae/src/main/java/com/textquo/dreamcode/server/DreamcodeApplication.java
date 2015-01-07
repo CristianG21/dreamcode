@@ -21,6 +21,9 @@
  */
 package com.textquo.dreamcode.server;
 
+import com.google.inject.Guice;
+import com.textquo.dreamcode.server.guice.GuiceConfigModule;
+import com.textquo.dreamcode.server.guice.SelfInjectingServerResourceModule;
 import com.textquo.dreamcode.server.resources.gae.GlobalStoreServerResource;
 import com.textquo.dreamcode.server.resources.gae.GlobalStoresServerResource;
 import com.textquo.dreamcode.server.resources.gae.PingServerResource;
@@ -44,6 +47,10 @@ public class DreamcodeApplication extends Application {
    */
   @Override
   public Restlet createInboundRoot() {
+
+
+    Guice.createInjector(new GuiceConfigModule(this.getContext()),
+            new SelfInjectingServerResourceModule());
 
     // Create a simple password verifier
 //    MapVerifier verifier = new MapVerifier();

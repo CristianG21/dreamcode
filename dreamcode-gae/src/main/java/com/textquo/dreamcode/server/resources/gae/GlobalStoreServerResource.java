@@ -21,10 +21,16 @@
  */
 package com.textquo.dreamcode.server.resources.gae;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.log.LogService;
 import com.google.appengine.repackaged.com.google.common.base.Preconditions;
+import com.google.inject.Inject;
 import com.textquo.dreamcode.server.JSONHelper;
+import com.textquo.dreamcode.server.domain.representation.StoreResponse;
+import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import com.textquo.dreamcode.server.resources.GlobalStoreResource;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
+import org.apache.commons.logging.Log;
 import org.json.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.restlet.data.Form;
@@ -38,13 +44,13 @@ import org.restlet.engine.header.HeaderConstants;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.util.Series;
 
-import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.textquo.twist.ObjectStoreService.store;
 
-public class GlobalStoreServerResource extends ServerResource
+public class GlobalStoreServerResource extends SelfInjectingServerResource
         implements GlobalStoreResource {
 
     private static final Logger LOG
@@ -70,7 +76,7 @@ public class GlobalStoreServerResource extends ServerResource
 
     @Override
     public Representation add(Representation entity){
-        String jsonString = "{}";
+        StoreResponse response = null;
         Series<Header> responseHeaders = (Series<Header>)
                 getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
         if (responseHeaders == null) {
@@ -100,7 +106,14 @@ public class GlobalStoreServerResource extends ServerResource
             Map<String,Object> dreamObject = JSONHelper.parseJson(jsonText);
             dreamObject.put("__key__", id);
             dreamObject.put("__kind__", type);
-            store().put(dreamObject);
+            Key key = store().put(dreamObject);
+
+            response = new StoreResponse();
+            response.setId(key.getName());
+            response.setType(type);
+
+            LOG.log(Level.FINER, "Response="+response.toMap());
+
             setStatus(Status.SUCCESS_OK);
         } catch (ParseException e){
             setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
@@ -112,7 +125,7 @@ public class GlobalStoreServerResource extends ServerResource
 
         }
         responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
-        return new StringRepresentation(jsonString, MediaType.APPLICATION_JSON);
+        return new JsonRepresentation("{}{}");
     };
 
     @Override
@@ -121,29 +134,34 @@ public class GlobalStoreServerResource extends ServerResource
     };
 
     @Override
-    public Representation find(Representation entity){
-        String jsonString = "{}";
-        Series<Header> responseHeaders = (Series<Header>)
-                getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
-        if (responseHeaders == null) {
-            responseHeaders = new Series(Header.class);
-            getResponseAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS,
-                    responseHeaders);
-        }
-        String id = String.valueOf(getAttribute("id"));
-        String type = String.valueOf(getAttribute("type"));
-        try{
-//            Iterator<DreamObject> it
-//                    = store().find(DreamObject.class, type).equal("id", id).now();
-            setStatus(Status.SUCCESS_OK);
-        } catch (Exception e){
-            setStatus(Status.SERVER_ERROR_INTERNAL);
-            e.printStackTrace();
-        } finally {
-
-        }
+    public Representation find(){
+//        String jsonString = "{ \" items\" : \" 123\"}";
+//        Series<Header> responseHeaders = (Series<Header>)
+//                getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
+//        if (responseHeaders == null) {
+//            responseHeaders = new Series(Header.class);
+//            getResponseAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS,
+//                    responseHeaders);
+//        }
+//        String id = String.valueOf(getAttribute("id"));
+//        String type = String.valueOf(getAttribute("type"));
+//        try{
+//            setStatus(Status.SUCCESS_OK);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            setStatus(Status.SERVER_ERROR_INTERNAL);
+//            Map<String,Object> error = new LinkedHashMap<>();
+//            error.put("error", e.getMessage());
+//            return new JsonRepresentation(error);
+//        } finally {
+//
+//        }
         Long count = shardCounterService.getCount("test");
-        return new StringRepresentation("test response: " + count);
+        shardCounterService.incrementCounter("test");
+        //StoreResponse response = new StoreResponse();
+        //response.setId(String.valueOf(count));
+        //response.setType("Test");
+        return new JsonRepresentation("{}");
     };
 
     @Override

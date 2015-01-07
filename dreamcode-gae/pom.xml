@@ -57,6 +57,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.restlet.gae</groupId>
+			<artifactId>org.restlet.ext.jaxrs</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.restlet.gae</groupId>
 			<artifactId>org.restlet.ext.jackson</artifactId>
 			<version>2.2.0</version>
 		</dependency>
@@ -74,6 +79,11 @@
 			<groupId>com.squareup.dagger</groupId>
 			<artifactId>dagger</artifactId>
 			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.fastjson</groupId>
@@ -99,6 +109,12 @@
 			<version>${version.appengine}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.github.rest-driver</groupId>
+			<artifactId>rest-server-driver</artifactId>
+			<version>1.1.33</version>
+			<scope>test</scope>
+		</dependency>
 		<!-- Arquillian Testing -->
 		<dependency>
 			<groupId>com.google.appengine</groupId>
@@ -107,6 +123,11 @@
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.extension</groupId>
+			<artifactId>arquillian-guice-impl</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

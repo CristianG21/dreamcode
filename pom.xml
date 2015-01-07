@@ -126,6 +126,14 @@
                 <artifactId>appengine-api-labs</artifactId>
                 <version>${version.com.google.gae.api}</version>
             </dependency>
+            <!-- Guice -->
+            <dependency>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-guice-bom</artifactId>
+                <version>1.0.0.Alpha2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!-- Testing -->
             <dependency>
                 <groupId>org.jboss.arquillian.graphene</groupId>

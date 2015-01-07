@@ -21,30 +21,53 @@
  */
 package com.textquo.dreamcode.server;
 
+import com.github.restdriver.serverdriver.http.response.Response;
+import com.google.appengine.repackaged.com.google.api.client.http.*;
+import com.google.appengine.repackaged.com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.appengine.repackaged.com.google.api.client.http.json.JsonHttpContent;
+import com.google.appengine.repackaged.com.google.api.client.json.JsonFactory;
+import com.google.appengine.repackaged.com.google.api.client.json.JsonObjectParser;
+import com.google.appengine.repackaged.com.google.api.client.json.jackson.JacksonFactory;
+import com.textquo.dreamcode.server.guice.GuiceConfigModule;
 import com.textquo.dreamcode.server.resources.gae.PingServerResource;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
+import org.jboss.arquillian.guice.api.annotation.GuiceConfiguration;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
+
+import static com.github.restdriver.serverdriver.RestServerDriver.*;
+import com.github.restdriver.serverdriver.http.response.Response;
+import com.github.restdriver.serverdriver.matchers.HasResponseBody;
+import com.github.restdriver.serverdriver.matchers.HasStatusCode;
+import static com.github.restdriver.serverdriver.Json.*;
+import static com.github.restdriver.serverdriver.Matchers.*;
+import static com.github.restdriver.serverdriver.RestServerDriver.*;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @RunWith(Arquillian.class)
+@GuiceConfiguration(GuiceConfigModule.class)
 @RunAsClient
 public class DreamcodeApplicationTestCase {
+
+    static final String STORE_URL = "http://localhost:8080/publicstore";
+
     /**
      * Deployment for the test
      *
@@ -58,7 +81,9 @@ public class DreamcodeApplicationTestCase {
                 .resolve("org.restlet.gae:org.restlet:2.2.1",
                         "org.restlet.gae:org.restlet.ext.servlet:2.2.1",
                         "org.restlet.gae:org.restlet.ext.jackson:2.2.1",
-                        "org.restlet.gae:org.restlet.ext.json:2.2.1").withTransitivity().asFile();
+                        "org.restlet.gae:org.restlet.ext.json:2.2.1",
+                        "com.googlecode.json-simple:json-simple:1.1.1",
+                        "com.squareup.dagger:dagger:1.2.2").withTransitivity().asFile();
         File[] sdkFile = Maven.resolver().loadPomFromFile("../pom.xml")
                 .importDependencies(ScopeType.TEST)
                 .resolve("com.google.appengine:appengine-api-1.0-sdk:1.9.17a",
@@ -79,6 +104,9 @@ public class DreamcodeApplicationTestCase {
                 .addClass(com.textquo.dreamcode.server.resources.UsersResource.class)
                 .addClass(com.textquo.dreamcode.server.services.ShardedCounter.class)
                 .addClass(com.textquo.dreamcode.server.services.ShardedCounterService.class)
+                .addClass(com.textquo.dreamcode.server.guice.SelfInjectingServerResource.class)
+                .addClass(com.textquo.dreamcode.server.guice.SelfInjectingServerResourceModule.class)
+                .addClass(com.textquo.dreamcode.server.guice.GuiceConfigModule.class)
                 .setWebXML("web.xml")
                 .addAsWebInfResource("appengine-web.xml")
                 .addAsWebInfResource("logging.properties");
@@ -88,10 +116,38 @@ public class DreamcodeApplicationTestCase {
     @OperateOnDeployment("default")
     public void shouldBeAbleToInvokeServletInDeployedWebApp() throws Exception {
         String body = readAllAndClose(new URL("http://localhost:8080/ping").openStream());
-        Assert.assertEquals(
+        assertEquals(
                 "Verify that the servlet was deployed and returns expected result",
                 PingServerResource.PONG,
                 body);
+        Response response = get("http://localhost:8080/ping", body("", "application/json"));
+        assertThat(response, hasStatusCode(200));
+        assertThat(response, hasResponseBody(is(PingServerResource.PONG)));
+
+    }
+
+    @Test
+    @OperateOnDeployment("default")
+    public void shouldbeAbleToInvokeGlobalStoreResource() throws Exception {
+        Response response = get("http://localhost:8080/publicstore", body("", "application/json"));
+        assertThat(response, hasResponseBody(is("{ 'hello' : 'world' }")));
+        assertThat(response, hasStatusCode(200));
+//        ClientResource resource = new ClientResource(STORE_URL);
+//        resource.setOnResponse(new Uniform() {
+//            @Override
+//            public void handle(Request request, Response response) {
+//
+//            }
+//        });
+//        resource.setEntityBuffering(true);
+//        Representation representation = resource.put("{}", MediaType.APPLICATION_JSON);
+//        assertEquals(Status.SUCCESS_OK, resource.getStatus());
+//        System.out.println(representation.getText());
+        //readAllAndClose(new URL("http://localhost:8080/publicstore").openStream());
+        //String body = readAllAndClose(new URL("http://localhost:8080/publicstore").openStream());
+        //System.out.println("body: " + body);
+
+
     }
 
     private String readAllAndClose(InputStream is) throws Exception {

@@ -30,7 +30,7 @@ public interface GlobalStoreResource extends BaseResource {
     @Put("json")
     public Representation update(Representation entity);
     @Get("json")
-    public Representation find(Representation entity);
+    public Representation find();
     @Delete("json")
     public Representation remove(Representation entity);
 }

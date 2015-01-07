@@ -21,13 +21,14 @@
  */
 package com.textquo.dreamcode.server.resources.gae;
 
+import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-public class PingServerResource extends ServerResource {
+public class PingServerResource extends SelfInjectingServerResource {
 
     public static String PONG = "{ 'response' : 'pong' }";
 
