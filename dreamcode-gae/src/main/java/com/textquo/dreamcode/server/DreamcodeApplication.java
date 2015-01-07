@@ -21,16 +21,13 @@
  */
 package com.textquo.dreamcode.server;
 
-import com.textquo.dreamcode.server.resources.DreamcodeGlobalStoreResource;
-import com.textquo.dreamcode.server.resources.DreamcodeGlobalStoresResource;
-import com.textquo.dreamcode.server.resources.PingServerResource;
-import com.textquo.dreamcode.server.resources.RootServerResource;
+import com.textquo.dreamcode.server.resources.gae.GlobalStoreServerResource;
+import com.textquo.dreamcode.server.resources.gae.GlobalStoresServerResource;
+import com.textquo.dreamcode.server.resources.gae.PingServerResource;
+import com.textquo.dreamcode.server.resources.gae.RootServerResource;
 import org.restlet.Application;
 import org.restlet.Restlet;
-import org.restlet.data.ChallengeScheme;
-import org.restlet.data.Status;
 import org.restlet.routing.Router;
-import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.MapVerifier;
 
 import java.io.IOException;
@@ -49,10 +46,10 @@ public class DreamcodeApplication extends Application {
   public Restlet createInboundRoot() {
 
     // Create a simple password verifier
-    MapVerifier verifier = new MapVerifier();
-    verifier.getLocalSecrets().put(
-            dreamcodeProperties().get("admin.user"),
-            dreamcodeProperties().get("admin.pass").toCharArray());
+//    MapVerifier verifier = new MapVerifier();
+//    verifier.getLocalSecrets().put(
+//            dreamcodeProperties().get("admin.user"),
+//            dreamcodeProperties().get("admin.pass").toCharArray());
 
     // Create a guard
     //ChallengeAuthenticator guard = new ChallengeAuthenticator(
@@ -62,8 +59,8 @@ public class DreamcodeApplication extends Application {
     Router router = new Router(getContext());
     router.attach(ROOT_URI, RootServerResource.class);
     router.attach(ROOT_URI + "ping", PingServerResource.class);
-    router.attach(ROOT_URI + "publicstore", DreamcodeGlobalStoreResource.class);
-    router.attach(ROOT_URI + "publicstores", DreamcodeGlobalStoresResource.class);
+    router.attach(ROOT_URI + "publicstore", GlobalStoreServerResource.class);
+    router.attach(ROOT_URI + "publicstores", GlobalStoresServerResource.class);
 //    router.attach(ROOT_URI + "user/{id}", UserServerResource.class);
 //    router.attach(ROOT_URI + "share/{id}", ShareServerResource.class);
 //    router.attach(ROOT_URI + "share/{id}/users", ShareUserServerResource.class);
@@ -76,16 +73,16 @@ public class DreamcodeApplication extends Application {
     return router;
   }
 
-  private Map<String,String> dreamcodeProperties(){
-    Map<String,String> map = new LinkedHashMap<String, String>();
-    InputStream is =  getContext().getClass().getResourceAsStream("/dreamcode.properties");
-    Properties props = new Properties();
-    try {
-      props.load(is);
-      map = new LinkedHashMap<String, String>((Map) props);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return map;
-  }
+//  private Map<String,String> dreamcodeProperties(){
+//    Map<String,String> map = new LinkedHashMap<String, String>();
+//    InputStream is =  getContext().getClass().getResourceAsStream("/dreamcode.properties");
+//    Properties props = new Properties();
+//    try {
+//      props.load(is);
+//      map = new LinkedHashMap<String, String>((Map) props);
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
+//    return map;
+//  }
 }

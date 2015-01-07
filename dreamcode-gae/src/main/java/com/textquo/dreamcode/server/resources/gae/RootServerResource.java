@@ -19,7 +19,7 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.resources;
+package com.textquo.dreamcode.server.resources.gae;
 
 import com.textquo.dreamcode.server.services.ShardedCounterService;
 import org.restlet.data.Status;

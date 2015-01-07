@@ -19,17 +19,15 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.resources;
+package com.textquo.dreamcode.server.resources.gae;
 
-import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-public class PingServerResource extends ServerResource {
+public class GlobalStoresServerResource extends ServerResource{
     @Get("json")
-    public Representation ping(){
-        return new StringRepresentation("{ 'response' : 'pong' }");
+    public Representation find(Representation entity){
+        throw new RuntimeException("Not yet implemented");
     }
 }

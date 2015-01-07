@@ -19,12 +19,12 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.resources;
+package com.textquo.dreamcode.server.resources.gae;
 
 import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 import com.textquo.dreamcode.server.JSONHelper;
+import com.textquo.dreamcode.server.resources.GlobalStoreResource;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
-import com.textquo.twist.GaeObjectStore;
 import org.json.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.restlet.data.Form;
@@ -38,19 +38,22 @@ import org.restlet.engine.header.HeaderConstants;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.util.Series;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.logging.Logger;
 
 import static com.textquo.twist.ObjectStoreService.store;
 
-public class DreamcodeGlobalStoreResource extends ServerResource {
+public class GlobalStoreServerResource extends ServerResource
+        implements GlobalStoreResource {
 
     private static final Logger LOG
-            = Logger.getLogger(DreamcodeGlobalStoreResource.class.getName());
+            = Logger.getLogger(GlobalStoreServerResource.class.getName());
 
+    @Inject
     ShardedCounterService shardCounterService;
 
-    @Options
+    @Override
     public void doOptions(Representation entity) {
         // Add additional headers to response
         Form responseHeaders = (Form) getResponse().getAttributes().get("org.restlet.http.headers");
@@ -65,7 +68,7 @@ public class DreamcodeGlobalStoreResource extends ServerResource {
         responseHeaders.add("Access-Control-Max-Age", "60");
     }
 
-    @Post("json")
+    @Override
     public Representation add(Representation entity){
         String jsonString = "{}";
         Series<Header> responseHeaders = (Series<Header>)
@@ -111,11 +114,13 @@ public class DreamcodeGlobalStoreResource extends ServerResource {
         responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
         return new StringRepresentation(jsonString, MediaType.APPLICATION_JSON);
     };
-    @Put("json")
-    public Representation update(String type, String id, String jsonObject){
-        return new StringRepresentation("{ 'response' : 'dummy' }");
+
+    @Override
+    public Representation update(Representation entity){
+        return entity;
     };
-    @Get("json")
+
+    @Override
     public Representation find(Representation entity){
         String jsonString = "{}";
         Series<Header> responseHeaders = (Series<Header>)
@@ -137,12 +142,13 @@ public class DreamcodeGlobalStoreResource extends ServerResource {
         } finally {
 
         }
-        return new StringRepresentation("{ 'response' : 'dummy' }");
-    };
-    @Delete("json")
-    public Representation remove(String id){
-        return new StringRepresentation("{ 'response' : 'dummy' }");
+        Long count = shardCounterService.getCount("test");
+        return new StringRepresentation("test response: " + count);
     };
 
+    @Override
+    public Representation remove(Representation entity){
+        return entity;
+    };
 
 }

@@ -22,12 +22,9 @@
 package com.textquo.dreamcode.server.resources;
 
 import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
+import org.restlet.resource.Options;
 
-public class DreamcodeGlobalStoresResource extends ServerResource{
-    @Get("json")
-    public Representation find(Representation entity){
-        throw new RuntimeException("Not yet implemented");
-    }
+public interface BaseResource {
+    @Options("json")
+    public void doOptions(Representation entity);
 }
