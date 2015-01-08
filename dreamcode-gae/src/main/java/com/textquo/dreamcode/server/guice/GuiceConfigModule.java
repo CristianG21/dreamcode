@@ -7,6 +7,8 @@ import java.util.logging.Logger;
 
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
+import com.textquo.dreamcode.server.repository.DocumentRepository;
+import com.textquo.dreamcode.server.repository.gae.GaeDocumentRepository;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
 import org.restlet.Context;
 
@@ -28,6 +30,7 @@ public class GuiceConfigModule extends AbstractModule {
         // see https://code.google.com/p/google-guice/issues/detail?id=488
         Logger.getLogger("com.google.inject.internal.util").setLevel(Level.WARNING);
         bind(ShardedCounterService.class).in(Scopes.SINGLETON);
+        bind(DocumentRepository.class).to(GaeDocumentRepository.class).in(Scopes.SINGLETON);
         bind(String.class).annotatedWith(Names.named("pong")).toInstance("pong!");
     }
 }
