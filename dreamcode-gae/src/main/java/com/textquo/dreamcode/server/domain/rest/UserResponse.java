@@ -19,21 +19,10 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.resources;
+package com.textquo.dreamcode.server.domain.rest;
 
-import org.restlet.representation.Representation;
-import org.restlet.resource.*;
-
-import java.util.Map;
-
-public interface GlobalStoreResource extends BaseResource {
-    @Post("json")
-    public Map add(Representation entity);
-    @Put("json")
-    public Map update(Representation entity);
-    @Get("json")
-    public Map find();
-    @Delete("json")
-    public Map remove(Representation entity);
+/**
+ * Represents one-or-more Users
+ */
+public class UserResponse extends ResponseDreamObject {
 }
-

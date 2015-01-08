@@ -5,16 +5,21 @@ import com.textquo.twist.annotations.Entity;
 import com.textquo.twist.annotations.Id;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Entity
 public class User {
     @Id(prefix = "user")
-    private String id;
+    private String id; // uuid
     private String email;
     private String passwordHash;
     // e.g. '@twitter' or '@facebook'
     private String domain;
+
+    private List<String> groups;
+
+
     // e.g. 'name', 'age' etc
     @Embedded
     private Map<String,String> parameterHash;

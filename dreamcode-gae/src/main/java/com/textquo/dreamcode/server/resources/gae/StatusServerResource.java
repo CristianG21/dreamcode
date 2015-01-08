@@ -19,21 +19,25 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.resources;
+package com.textquo.dreamcode.server.resources.gae;
 
-import org.restlet.representation.Representation;
-import org.restlet.resource.*;
+import com.textquo.dreamcode.server.domain.rest.AppStatusResponse;
+import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
+import org.restlet.resource.Get;
+import org.restlet.resource.ServerResource;
 
 import java.util.Map;
 
-public interface GlobalStoreResource extends BaseResource {
-    @Post("json")
-    public Map add(Representation entity);
-    @Put("json")
-    public Map update(Representation entity);
+/**
+ * Resource which has only one representation.
+ */
+public class StatusServerResource extends SelfInjectingServerResource {
     @Get("json")
-    public Map find();
-    @Delete("json")
-    public Map remove(Representation entity);
+    public Map represent() {
+        // TODO - Get name and version from properties file
+        AppStatusResponse status = new AppStatusResponse();
+        status.setName("Dreamcode Application");
+        status.setVersion("1.0.0-SNAPSHOT");
+        return status;
+    }
 }
-

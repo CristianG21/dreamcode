@@ -26,7 +26,8 @@ import com.google.appengine.api.log.LogService;
 import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.textquo.dreamcode.server.JSONHelper;
-import com.textquo.dreamcode.server.domain.representation.StoreResponse;
+import com.textquo.dreamcode.server.domain.rest.DocumentResponse;
+import com.textquo.dreamcode.server.domain.rest.ErrorResponse;
 import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import com.textquo.dreamcode.server.resources.GlobalStoreResource;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
@@ -75,8 +76,8 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
     }
 
     @Override
-    public Representation add(Representation entity){
-        StoreResponse response = null;
+    public Map add(Representation entity){
+        DocumentResponse response = new DocumentResponse();
         Series<Header> responseHeaders = (Series<Header>)
                 getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
         if (responseHeaders == null) {
@@ -86,55 +87,74 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
         }
         String id = String.valueOf(getQueryValue("id"));
         String type = String.valueOf(getQueryValue("type"));
-        Preconditions.checkNotNull(type, "Object type cannot be null");
-        Preconditions.checkNotNull(entity, "Object cannot be null");
-        LOG.info("Object type=" + type);
-        LOG.info("Object id=" + id);
-        //String namespace = getQueryValue("namespace");
-        try{
-            JsonRepresentation represent = new JsonRepresentation(entity);
-            JSONObject jsonobject = represent.getJsonObject();
-            String jsonText = jsonobject.toString();
 
-            if(id==null || id.isEmpty() || id.equals("null") || id.equals("NULL")){
-                shardCounterService = new ShardedCounterService();
-                shardCounterService.incrementCounter(type);
-                long count = shardCounterService.getCount(type);
-                LOG.info("Generated from sharded counter: " + count);
-                id = String.valueOf(count);
-            }
-            Map<String,Object> dreamObject = JSONHelper.parseJson(jsonText);
-            dreamObject.put("__key__", id);
-            dreamObject.put("__kind__", type);
-            Key key = store().put(dreamObject);
+        //Preconditions.checkNotNull(type, "Object type cannot be null");
+        //Preconditions.checkNotNull(entity, "Object cannot be null");
 
-            response = new StoreResponse();
-            response.setId(key.getName());
-            response.setType(type);
-
-            LOG.log(Level.FINER, "Response="+response.toMap());
-
-            setStatus(Status.SUCCESS_OK);
-        } catch (ParseException e){
+        // TODO - Simplify this
+        if(id == null || id.isEmpty() || id.equals("null") || id.equals("NULL")) {
+            response = new ErrorResponse();
+            ((ErrorResponse) response).setError("Must provide id as query parameter");
             setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            e.printStackTrace();
-        } catch (Exception e){
-            setStatus(Status.SERVER_ERROR_INTERNAL);
-            e.printStackTrace();
-        } finally {
+        } else if(type == null || type.isEmpty() || type.equals("null") || type.equals("NULL")) {
+            response = new ErrorResponse();
+            ((ErrorResponse) response).setError("Must provide type as query parameter");
+            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        } else {
+            if(entity != null){
+                LOG.info("Object type=" + type);
+                LOG.info("Object id=" + id);
+                //String namespace = getQueryValue("namespace");
+                try{
+                    JsonRepresentation represent = new JsonRepresentation(entity);
+                    JSONObject jsonobject = represent.getJsonObject();
+                    String jsonText = jsonobject.toString();
+
+                    if(id==null || id.isEmpty() || id.equals("null") || id.equals("NULL")){
+                        shardCounterService = new ShardedCounterService();
+                        shardCounterService.incrementCounter(type);
+                        long count = shardCounterService.getCount(type);
+                        LOG.info("Generated from sharded counter: " + count);
+                        id = String.valueOf(count);
+                    }
+                    Map<String,Object> dreamObject = JSONHelper.parseJson(jsonText);
+                    dreamObject.put("__key__", id);
+                    dreamObject.put("__kind__", type);
+                    Key key = store().put(dreamObject);
+
+                    response.setId(key.getName());
+                    response.setType(type);
+
+                    setStatus(Status.SUCCESS_OK);
+                } catch (ParseException e){
+                    setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+                    e.printStackTrace();
+                } catch (Exception e){
+                    setStatus(Status.SERVER_ERROR_INTERNAL);
+                    e.printStackTrace();
+                } finally {
+
+                }
+            } else {
+                response = new ErrorResponse();
+                ((ErrorResponse) response).setError("Must provide JSON document to store");
+                setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+            }
 
         }
         responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
-        return new JsonRepresentation("{}{}");
+        return response;
     };
 
     @Override
-    public Representation update(Representation entity){
-        return entity;
+    public Map update(Representation entity){
+        DocumentResponse response = new DocumentResponse();
+        return response;
     };
 
     @Override
-    public Representation find(){
+    public Map find(){
+        DocumentResponse response = new DocumentResponse();
 //        String jsonString = "{ \" items\" : \" 123\"}";
 //        Series<Header> responseHeaders = (Series<Header>)
 //                getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
@@ -161,12 +181,13 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
         //StoreResponse response = new StoreResponse();
         //response.setId(String.valueOf(count));
         //response.setType("Test");
-        return new JsonRepresentation("{}");
+        return response;
     };
 
     @Override
-    public Representation remove(Representation entity){
-        return entity;
+    public Map remove(Representation entity){
+        DocumentResponse response = new DocumentResponse();
+        return response;
     };
 
 }

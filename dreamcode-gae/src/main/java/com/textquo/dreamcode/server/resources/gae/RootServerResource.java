@@ -21,35 +21,22 @@
  */
 package com.textquo.dreamcode.server.resources.gae;
 
-import com.textquo.dreamcode.server.services.ShardedCounterService;
-import org.restlet.data.Status;
-import org.restlet.ext.servlet.ServletUtils;
+import com.textquo.dreamcode.server.domain.rest.AppStatusResponse;
+import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * Resource which has only one representation.
  */
-public class RootServerResource extends ServerResource {
-
-    @Inject
-    ShardedCounterService shardCounterService;
-
+public class RootServerResource extends SelfInjectingServerResource {
     @Get("json")
-    public String represent() {
-        shardCounterService = new ShardedCounterService();
-        String client = getRequest().getClientInfo().getAddress();
-        org.restlet.Request restletRequest = getRequest();
-        HttpServletRequest servletRequest = ServletUtils.getRequest(restletRequest);
-        String localName = servletRequest.getLocalName();
-        String path = getRequest().getResourceRef().getHostIdentifier() +
-                getRequest().getResourceRef().getPath();
-        String resp = "Hello, world (from the cloud!), your client IP: " + client + " and domain is: " + localName + " path is: " + path;
-        resp = resp + ", shard count=" + shardCounterService.getCount("test");
-        setStatus(Status.SUCCESS_OK);
-        return resp;
+    public Map represent() {
+        // TODO - Get name and version from properties file
+        AppStatusResponse status = new AppStatusResponse();
+        status.setName("Dreamcode Application");
+        status.setVersion("1.0.0-SNAPSHOT");
+        return status;
     }
 }

@@ -24,10 +24,7 @@ package com.textquo.dreamcode.server;
 import com.google.inject.Guice;
 import com.textquo.dreamcode.server.guice.GuiceConfigModule;
 import com.textquo.dreamcode.server.guice.SelfInjectingServerResourceModule;
-import com.textquo.dreamcode.server.resources.gae.GlobalStoreServerResource;
-import com.textquo.dreamcode.server.resources.gae.GlobalStoresServerResource;
-import com.textquo.dreamcode.server.resources.gae.PingServerResource;
-import com.textquo.dreamcode.server.resources.gae.RootServerResource;
+import com.textquo.dreamcode.server.resources.gae.*;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
@@ -65,6 +62,7 @@ public class DreamcodeApplication extends Application {
 
     Router router = new Router(getContext());
     router.attach(ROOT_URI, RootServerResource.class);
+    router.attach(ROOT_URI, StatusServerResource.class);
     router.attach(ROOT_URI + "ping", PingServerResource.class);
     router.attach(ROOT_URI + "publicstore", GlobalStoreServerResource.class);
     router.attach(ROOT_URI + "publicstores", GlobalStoresServerResource.class);
