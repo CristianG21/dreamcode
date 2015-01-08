@@ -5,6 +5,7 @@ import com.textquo.twist.annotations.Flat;
 import com.textquo.twist.annotations.Id;
 import com.textquo.twist.annotations.Kind;
 
+import javax.print.Doc;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,6 +22,8 @@ public class Document {
     private Map fields;
 
     public Document(){}
+
+    public Document(String kind){}
 
     public String getKind() {
         return kind;
