@@ -17,6 +17,8 @@ public class Document {
     @Kind
     private String kind;
 
+    private String userId;
+
     @Flat
     private Map fields;
 
@@ -52,5 +54,13 @@ public class Document {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

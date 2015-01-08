@@ -9,8 +9,8 @@ import java.util.Map;
 
 @Entity
 public class User {
-    @Id
-    private Long id;
+    @Id(prefix = "user")
+    private String id;
     private String email;
     private String passwordHash;
     // e.g. '@twitter' or '@facebook'
@@ -22,11 +22,11 @@ public class User {
     public User() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
