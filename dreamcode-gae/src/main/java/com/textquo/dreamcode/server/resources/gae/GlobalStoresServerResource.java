@@ -160,6 +160,7 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
                 response.put("item" + count, newDoc);
                 count++;
             }
+            response.put("count", count);
             response.put("has_next", false);
             setStatus(Status.SUCCESS_OK);
         } catch (Exception e){
