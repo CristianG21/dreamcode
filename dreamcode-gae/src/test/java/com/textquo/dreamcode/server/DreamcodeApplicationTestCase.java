@@ -128,26 +128,15 @@ public class DreamcodeApplicationTestCase {
 
     @Test
     @OperateOnDeployment("default")
-    public void shouldbeAbleToInvokeGlobalStoreResource() throws Exception {
-        Response response = get("http://localhost:8080/publicstore", body("", "application/json"));
-        assertThat(response, hasResponseBody(is("{ 'hello' : 'world' }")));
-        assertThat(response, hasStatusCode(200));
-//        ClientResource resource = new ClientResource(STORE_URL);
-//        resource.setOnResponse(new Uniform() {
-//            @Override
-//            public void handle(Request request, Response response) {
-//
-//            }
-//        });
-//        resource.setEntityBuffering(true);
-//        Representation representation = resource.put("{}", MediaType.APPLICATION_JSON);
-//        assertEquals(Status.SUCCESS_OK, resource.getStatus());
-//        System.out.println(representation.getText());
-        //readAllAndClose(new URL("http://localhost:8080/publicstore").openStream());
-        //String body = readAllAndClose(new URL("http://localhost:8080/publicstore").openStream());
-        //System.out.println("body: " + body);
+    public void shouldBeAbleToAddEntityAndReadIt() throws Exception {
+        String toSave = "{ \"content\" : \"sample content\" }";
+        Response postResponse = post("http://localhost:8080/test", body(toSave, "application/json"));
+        Response getResponse = get("http://localhost:8080/test", body("", "application/json"));
 
+        assertThat(postResponse, hasStatusCode(200));
 
+        //assertThat(getResponse, hasResponseBody(is("{ 'hello' : 'world' }")));
+        assertThat(getResponse, hasStatusCode(200));
     }
 
     private String readAllAndClose(InputStream is) throws Exception {
