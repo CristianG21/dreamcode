@@ -64,32 +64,52 @@ public class DreamcodeApplication extends Application {
     router.attach(ROOT_URI, RootServerResource.class);
     router.attach(ROOT_URI, StatusServerResource.class);
     router.attach(ROOT_URI + "ping", PingServerResource.class);
+    // Collections
     router.attach(ROOT_URI + "{collections}", GlobalStoresServerResource.class);
     router.attach(ROOT_URI + "{collections}/{entity_id}", GlobalStoreServerResource.class);
+    router.attach(ROOT_URI + "{collections}?{query}", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "{collections}/{entity_id}/{relationship}?{query}", GaeDummyServerResource.class);
     router.attach(ROOT_URI + "{collections}/{first_entity_id}/{relationship}/{second_entity_id}", GaeLinkingServerResource.class);
+    // Groups
+    router.attach(ROOT_URI + "groups", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "groups/group_name", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "groups/group_name/users/user_id", GaeDummyServerResource.class); // Add or Remove a user from group
+    router.attach(ROOT_URI + "groups/group_name/feed", GaeDummyServerResource.class);
+    // Roles
+    router.attach(ROOT_URI + "roles", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "roles/{role_id}", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "roles/{role_id}/permissions", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "roles/{role_id}/permissions?permission={grant_url_pattern", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "roles/{role_id}/users", GaeDummyServerResource.class); // Get users in Role
+    router.attach(ROOT_URI + "roles/{role_id}/users/{user_id}", GaeDummyServerResource.class); // Add or Remove a user from role
+    // Users
+    router.attach(ROOT_URI + "users", GaeDummyServerResource.class); // Create a user
+    router.attach(ROOT_URI + "users/{user_id}/password", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "users/{user_id}", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "users?{query}", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "users/{user_id}/feed", GaeDummyServerResource.class);
+    // Shares
+    router.attach(ROOT_URI + "shares", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "shares/{share_id}", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "shares/{share_id}/accesses/{user_id}?access={access_type}", GaeDummyServerResource.class); // Access types: read, write, read_write
+    router.attach(ROOT_URI + "shares/{share_id}/{entity_id}", GaeDummyServerResource.class); // Add remove
 
-//    router.attach(ROOT_URI + "user/{id}", UserServerResource.class);
-//    router.attach(ROOT_URI + "share/{id}", ShareServerResource.class);
-//    router.attach(ROOT_URI + "share/{id}/users", ShareUserServerResource.class);
-//    router.attach(ROOT_URI + "share/{id}/stores", ShareStoreServerResource.class);
-//    router.attach(ROOT_URI + "store/{id}", ShareStoreServerResource.class);
-//    router.attach(ROOT_URI + "task/{id}", TaskServerResource.class);
 //    guard.setNext(router);
 
 //    return guard;
     return router;
   }
 
-//  private Map<String,String> dreamcodeProperties(){
-//    Map<String,String> map = new LinkedHashMap<String, String>();
-//    InputStream is =  getContext().getClass().getResourceAsStream("/dreamcode.properties");
-//    Properties props = new Properties();
-//    try {
-//      props.load(is);
-//      map = new LinkedHashMap<String, String>((Map) props);
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//    return map;
-//  }
+  private Map<String,String> dreamcodeProperties(){
+    Map<String,String> map = new LinkedHashMap<String, String>();
+    InputStream is =  getContext().getClass().getResourceAsStream("/dreamcode.properties");
+    Properties props = new Properties();
+    try {
+      props.load(is);
+      map = new LinkedHashMap<String, String>((Map) props);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return map;
+  }
 }
