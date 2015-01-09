@@ -29,7 +29,7 @@ import org.restlet.client.Request;
 import org.restlet.client.Response;
 import org.restlet.client.Uniform;
 import org.restlet.client.resource.ClientResource;
-import no.eirikb.gwtchannelapi.client.Channel;
+//import no.eirikb.gwtchannelapi.client.Channel;
 
 import java.util.Map;
 

@@ -4,13 +4,13 @@ import com.google.gwt.junit.client.GWTTestCase;
 import com.textquo.dreamcode.client.shares.Share;
 import com.textquo.dreamcode.client.stores.Store;
 
-import javax.inject.Inject;
+//import javax.inject.Inject;
 
 public class DreamcodeStoreTest extends GWTTestCase {
 
     private static String URL_BASE = "http://localhost:8080";
 
-    @Inject
+    //@Inject
     Dreamcode dreamCode;
 
     @Override

@@ -56,11 +56,11 @@
 			<version>${gwt.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>no.eirikb.gwtchannelapi</groupId>
-			<artifactId>gwt-channel-api</artifactId>
-			<version>0.3</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>no.eirikb.gwtchannelapi</groupId>-->
+			<!--<artifactId>gwt-channel-api</artifactId>-->
+			<!--<version>0.3</version>-->
+		<!--</dependency>-->
 		<dependency>
 		  	<groupId>org.restlet.gwt</groupId>
 		  	<artifactId>org.restlet</artifactId>
@@ -103,11 +103,6 @@
 			<artifactId>json-simple</artifactId>
 			<version>1.1.1</version>
 		</dependency-->
-		<dependency>
-			<groupId>com.squareup.dagger</groupId>
-			<artifactId>dagger</artifactId>
-			<version>1.2.2</version>
-		</dependency>
 		<!-- Testing -->
 		<dependency>
 			<groupId>com.google.http-client</groupId>
@@ -118,6 +113,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.2</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
