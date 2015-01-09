@@ -85,6 +85,8 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
             getResponseAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS,
                     responseHeaders);
         }
+        responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
+
         String id = String.valueOf(getQueryValue("id"));
         String type = String.valueOf(getQueryValue("type"));
 
@@ -127,11 +129,13 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
 
                     setStatus(Status.SUCCESS_OK);
                 } catch (ParseException e){
+                    ((ErrorResponse) response).setError("Bad JSON Request object");
                     setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-                    e.printStackTrace();
+                    return response;
                 } catch (Exception e){
+                    ((ErrorResponse) response).setError("Internal Server Error");
                     setStatus(Status.SERVER_ERROR_INTERNAL);
-                    e.printStackTrace();
+                    return response;
                 } finally {
 
                 }
@@ -142,7 +146,6 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
             }
 
         }
-        responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
         return response;
     };
 

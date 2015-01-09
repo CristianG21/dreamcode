@@ -30,8 +30,8 @@ import java.util.Map;
 @Entity
 public class Document {
 
-    @Id(prefix = "document")
-    private String id;
+    @Id
+    private Long id;
 
     @Kind
     private String kind;
@@ -86,11 +86,18 @@ public class Document {
         return fields.get(name);
     }
 
-    public String getId() {
+    public Map getFields(){
+        if(fields == null){
+            fields = new LinkedHashMap();
+        }
+        return fields;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

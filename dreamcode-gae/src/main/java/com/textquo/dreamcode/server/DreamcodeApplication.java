@@ -64,8 +64,10 @@ public class DreamcodeApplication extends Application {
     router.attach(ROOT_URI, RootServerResource.class);
     router.attach(ROOT_URI, StatusServerResource.class);
     router.attach(ROOT_URI + "ping", PingServerResource.class);
-    router.attach(ROOT_URI + "publicstore", GlobalStoreServerResource.class);
-    router.attach(ROOT_URI + "publicstores", GlobalStoresServerResource.class);
+    router.attach(ROOT_URI + "{collections}", GlobalStoresServerResource.class);
+    router.attach(ROOT_URI + "{collections}/{entity_id}", GlobalStoreServerResource.class);
+    router.attach(ROOT_URI + "{collections}/{first_entity_id}/{relationship}/{second_entity_id}", GaeLinkingServerResource.class);
+
 //    router.attach(ROOT_URI + "user/{id}", UserServerResource.class);
 //    router.attach(ROOT_URI + "share/{id}", ShareServerResource.class);
 //    router.attach(ROOT_URI + "share/{id}/users", ShareUserServerResource.class);

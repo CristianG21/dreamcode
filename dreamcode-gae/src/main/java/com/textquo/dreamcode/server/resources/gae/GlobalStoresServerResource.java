@@ -21,13 +21,152 @@
  */
 package com.textquo.dreamcode.server.resources.gae;
 
+import com.google.appengine.api.datastore.Key;
+import com.google.inject.Inject;
+import com.textquo.dreamcode.server.JSONHelper;
+import com.textquo.dreamcode.server.domain.Document;
+import com.textquo.dreamcode.server.domain.rest.DocumentResponse;
+import com.textquo.dreamcode.server.domain.rest.ErrorResponse;
+import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
+import com.textquo.dreamcode.server.services.ShardedCounterService;
+import org.json.JSONObject;
+import org.json.simple.parser.ParseException;
+import org.restlet.data.Status;
+import org.restlet.engine.header.Header;
+import org.restlet.engine.header.HeaderConstants;
+import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Series;
 
-public class GlobalStoresServerResource extends ServerResource{
+import java.util.Iterator;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import static com.textquo.twist.ObjectStoreService.store;
+
+// PATH: /{collections}
+public class GlobalStoresServerResource extends SelfInjectingServerResource {
+
+    @Inject
+    ShardedCounterService shardCounterService;
+
+    private static final Logger LOG
+            = Logger.getLogger(GlobalStoresServerResource.class.getName());
+
+    /**
+     * Post one or more entities. Entity id's will be auto-generated
+     *
+     * @param entity
+     * @return
+     */
+    @Post("json")
+    public Map add(Representation entity){
+        DocumentResponse response = new DocumentResponse();
+        Series<Header> responseHeaders = (Series<Header>)
+                getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
+        if (responseHeaders == null) {
+            responseHeaders = new Series(Header.class);
+            getResponseAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS,
+                    responseHeaders);
+        }
+        responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
+
+        String type = (String) getRequest().getAttributes().get("collections");
+
+        //Preconditions.checkNotNull(type, "Object type cannot be null");
+        //Preconditions.checkNotNull(entity, "Object cannot be null");
+
+        // TODO - Simplify this
+//        if(id == null || id.isEmpty() || id.equals("null") || id.equals("NULL")) {
+//            response = new ErrorResponse();
+//            ((ErrorResponse) response).setError("Must provide id as path parameter");
+//            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+//        }
+//
+        if(type == null || type.isEmpty() || type.equals("null") || type.equals("NULL")) {
+            response = new ErrorResponse();
+            ((ErrorResponse) response).setError("Must provide type as query parameter");
+            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        } else {
+            if(entity != null){
+                LOG.info("Object type=" + type);
+                try{
+                    JsonRepresentation represent = new JsonRepresentation(entity);
+                    JSONObject jsonobject = represent.getJsonObject();
+                    String jsonText = jsonobject.toString();
+
+                    Map<String,Object> dreamObject = JSONHelper.parseJson(jsonText);
+                    dreamObject.put("__key__", null); // auto-generate
+                    dreamObject.put("__kind__", type);
+                    Key key = store().put(dreamObject);
+
+                    response.setId(String.valueOf(key.getId()));
+                    response.setType(type);
+
+                    setStatus(Status.SUCCESS_OK);
+                } catch (ParseException e){
+                    ((ErrorResponse) response).setError("Bad JSON Request object");
+                    setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+                    return response;
+                } catch (Exception e){
+                    ((ErrorResponse) response).setError("Internal Server Error");
+                    setStatus(Status.SERVER_ERROR_INTERNAL);
+                    return response;
+                } finally {
+
+                }
+            } else {
+                response = new ErrorResponse();
+                ((ErrorResponse) response).setError("Must provide JSON document to store");
+                setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+            }
+
+        }
+        return response;
+    };
+
+
     @Get("json")
-    public Representation find(Representation entity){
-        throw new RuntimeException("Not yet implemented");
+    public Map list(Representation entity){
+        DocumentResponse response = new DocumentResponse();
+        Series<Header> responseHeaders = (Series<Header>)
+                getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
+        if (responseHeaders == null) {
+            responseHeaders = new Series(Header.class);
+            getResponseAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS,
+                    responseHeaders);
+        }
+        responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
+
+        String type = (String) getRequest().getAttributes().get("collections");
+
+        LOG.info("Query for type=" + type);
+
+        try {
+            Iterator<Document> it = store().find(Document.class, type).limit(100).now();
+            int count = 0;
+            while(it.hasNext()){
+                Document doc = it.next();
+                Long docId = doc.getId();
+                String docType = doc.getKind();
+                Map properties = doc.getFields();
+                DocumentResponse newDoc = new DocumentResponse();
+                newDoc.setId(String.valueOf(docId));
+                newDoc.setType(docType);
+                newDoc.put("properties", properties);
+                response.put("item" + count, newDoc);
+                count++;
+            }
+            response.put("has_next", false);
+            setStatus(Status.SUCCESS_OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            setStatus(Status.SERVER_ERROR_INTERNAL);
+        }
+
+        return response;
     }
 }
