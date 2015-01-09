@@ -64,6 +64,17 @@ public class DreamcodeApplication extends Application {
     router.attach(ROOT_URI, RootServerResource.class);
     router.attach(ROOT_URI, StatusServerResource.class);
     router.attach(ROOT_URI + "ping", PingServerResource.class);
+    // Management
+    router.attach(ROOT_URI + "management/token", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "management/users/{user_id}", GaeDummyServerResource.class); // Create admin user
+    router.attach(ROOT_URI + "management/users/{user_id}/password", GaeDummyServerResource.class); // Set admin password
+    router.attach(ROOT_URI + "management/users/resetpw", GaeDummyServerResource.class); // GET: Reset passwod, POST: Reset username & password
+    router.attach(ROOT_URI + "management/users/{user_id}/activate?token={token}&confirm={confirm_email}", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "management/users/{user_id}/reactivate", GaeDummyServerResource.class); // Reactivate admin user
+    router.attach(ROOT_URI + "management/users/{user_id}/feed", GaeDummyServerResource.class);  // Get admin user feed
+    // Activities
+    router.attach(ROOT_URI + "users/{user_id}/activities", GaeDummyServerResource.class); // Create an activity
+    router.attach(ROOT_URI + "groups/{group_id}/activities", GaeDummyServerResource.class); // Post activity to group
     // Groups
     router.attach(ROOT_URI + "groups", GaeDummyServerResource.class);
     router.attach(ROOT_URI + "groups/group_name", GaeDummyServerResource.class);
@@ -90,6 +101,7 @@ public class DreamcodeApplication extends Application {
     // Collections
     router.attach(ROOT_URI + "{collections}", GlobalStoresServerResource.class);
     router.attach(ROOT_URI + "{collections}/{entity_id}", GlobalStoreServerResource.class);
+    router.attach(ROOT_URI + "{collections}/{entity_id}?write_access_key=?{write_access_key}", GlobalStoreServerResource.class);
     router.attach(ROOT_URI + "{collections}?{query}", GaeDummyServerResource.class);
     router.attach(ROOT_URI + "{collections}/{entity_id}/{relationship}?{query}", GaeDummyServerResource.class);
     router.attach(ROOT_URI + "{collections}/{first_entity_id}/{relationship}/{second_entity_id}", GaeLinkingServerResource.class);
