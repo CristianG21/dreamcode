@@ -22,9 +22,10 @@
 package com.textquo.dreamcode.server.domain.rest;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Base Response object
  */
-public class ResponseDreamObject extends HashMap<String,Object> {}
+public class ResponseDreamObject extends LinkedHashMap<String,Object> {}
 
