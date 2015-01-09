@@ -26,10 +26,12 @@ import com.google.appengine.api.log.LogService;
 import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.textquo.dreamcode.server.JSONHelper;
+import com.textquo.dreamcode.server.domain.Document;
 import com.textquo.dreamcode.server.domain.rest.DocumentResponse;
 import com.textquo.dreamcode.server.domain.rest.ErrorResponse;
 import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import com.textquo.dreamcode.server.resources.GlobalStoreResource;
+import com.textquo.dreamcode.server.services.DocumentService;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
 import org.apache.commons.logging.Log;
 import org.json.JSONObject;
@@ -59,6 +61,9 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
 
     @Inject
     ShardedCounterService shardCounterService;
+
+    @Inject
+    DocumentService service;
 
     @Override
     public void doOptions(Representation entity) {
@@ -158,32 +163,32 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
     @Override
     public Map find(){
         DocumentResponse response = new DocumentResponse();
-//        String jsonString = "{ \" items\" : \" 123\"}";
-//        Series<Header> responseHeaders = (Series<Header>)
-//                getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
-//        if (responseHeaders == null) {
-//            responseHeaders = new Series(Header.class);
-//            getResponseAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS,
-//                    responseHeaders);
-//        }
-//        String id = String.valueOf(getAttribute("id"));
-//        String type = String.valueOf(getAttribute("type"));
-//        try{
-//            setStatus(Status.SUCCESS_OK);
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            setStatus(Status.SERVER_ERROR_INTERNAL);
-//            Map<String,Object> error = new LinkedHashMap<>();
-//            error.put("error", e.getMessage());
-//            return new JsonRepresentation(error);
-//        } finally {
-//
-//        }
-        Long count = shardCounterService.getCount("test");
-        shardCounterService.incrementCounter("test");
-        //StoreResponse response = new StoreResponse();
-        //response.setId(String.valueOf(count));
-        //response.setType("Test");
+        Series<Header> responseHeaders = (Series<Header>)
+                getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
+        if (responseHeaders == null) {
+            responseHeaders = new Series(Header.class);
+            getResponseAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS,
+                    responseHeaders);
+        }
+        responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
+        String type = (String) getRequest().getAttributes().get("collections");
+        String id = (String) getRequest().getAttributes().get("entity_id");
+        if(type == null || type.isEmpty() || type.equals("null") || type.equals("NULL")) {
+            response = new ErrorResponse();
+            ((ErrorResponse) response).setError("Must provide type as query parameter");
+            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        } else {
+            Document doc = service.readDocument(type, Long.valueOf(id));
+            Long docId = doc.getId();
+            String docType = doc.getKind();
+            Map properties = doc.getFields();
+            DocumentResponse newDoc = new DocumentResponse();
+            newDoc.setId(String.valueOf(docId));
+            newDoc.setType(docType);
+            newDoc.put("properties", properties);
+            response = newDoc;
+            setStatus(Status.SUCCESS_OK);
+        }
         return response;
     };
 
