@@ -41,13 +41,13 @@ public class TestDocumentRepository extends TestDatastoreBase {
     public void test_readDocument(){
         Document friend = new Document("Friend");
         friend.setField("name", "John Doe");
-        friend.setId("sample1");
+        friend.setId(1L);
         friend.setKind("Friend");
         repository.create(friend);
         Document saved = repository.read("Friend", friend.getId());
         assertNotNull(saved);
         assertEquals("sample1", saved.getId());
-        assertTrue(saved.getId().startsWith("sample"));
+        //assertTrue(saved.getId().startsWith("sample"));
     }
 
     @Test

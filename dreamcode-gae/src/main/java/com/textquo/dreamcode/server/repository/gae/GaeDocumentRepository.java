@@ -15,7 +15,7 @@ public class GaeDocumentRepository implements DocumentRepository {
     }
 
     @Override
-    public Document read(String type, String docId) {
+    public Document read(String type, Long docId) {
         Preconditions.checkNotNull(docId, "Null document id");
         return store().get(Document.class, type, docId);
     }
