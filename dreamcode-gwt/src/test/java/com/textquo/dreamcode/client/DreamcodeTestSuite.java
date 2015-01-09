@@ -8,7 +8,7 @@ import junit.framework.TestSuite;
 public class DreamcodeTestSuite extends GWTTestSuite {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test for a Dreamcode GWT Library");
-        suite.addTestSuite(DreamcodeTest.class);
+        suite.addTestSuite(DreamcodeSmokeTest.class);
         suite.addTestSuite(TestJsonConverter.class);
         return suite;
     }

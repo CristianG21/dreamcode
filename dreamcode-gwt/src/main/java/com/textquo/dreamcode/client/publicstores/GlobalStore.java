@@ -117,7 +117,7 @@ public class GlobalStore {
     }
 
     public void findAll(String type, final DreamcodeCallback callback){
-        final ClientResource resource = new ClientResource(Routes.DREAMCODE + Routes.PUBLIC_STORES_API);
+        final ClientResource resource = new ClientResource(Routes.DREAMCODE + Routes.COLLECTIONS);
         resource.setOnResponse(new Uniform() {
             public void handle(Request request, Response response) {
                 try {

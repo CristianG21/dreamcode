@@ -12,7 +12,13 @@ import org.restlet.client.data.MediaType;
 import org.restlet.client.data.Status;
 import org.restlet.client.resource.ClientResource;
 
-public class DreamcodeTest extends GWTTestCase {
+import java.io.IOException;
+
+/**
+ * Run $mvn clean appengine:devserver
+ * for the dreamcode-gae package before running these test!
+ */
+public class DreamcodeSmokeTest extends GWTTestCase {
 
     private static String URL_BASE = "http://localhost:8080";
 
@@ -50,15 +56,25 @@ public class DreamcodeTest extends GWTTestCase {
             e.printStackTrace();
         }
     }
-    public void testGlobalStoreAdd(){
-        String url = URL_BASE; //Routes.DREAMCODE + Routes.COLLECTIONS
+    public void testCollections_Root_Get(){
+        String type = "test";
+        String url = URL_BASE + Routes.DREAMCODE  + "/" + type;
+        final Status[] status = new Status[1];
         ClientResource resource = new ClientResource(url);
         resource.setOnResponse(new Uniform() {
             public void handle(Request request, Response response) {
-                Status status = response.getStatus();
-                //assertEquals(Status.SUCCESS_OK, status);
+                status[0] = response.getStatus();
+                String body = null;
+                try {
+                    body = response.getEntity().getText();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                assertEquals(Status.SUCCESS_OK, status[0]);
+                assertNotNull(body);
+                assertTrue(!body.isEmpty());
             }
         });
-        resource.post("{}", MediaType.APPLICATION_JSON);
+        resource.get(MediaType.APPLICATION_JSON);
     }
 }
