@@ -64,12 +64,6 @@ public class DreamcodeApplication extends Application {
     router.attach(ROOT_URI, RootServerResource.class);
     router.attach(ROOT_URI, StatusServerResource.class);
     router.attach(ROOT_URI + "ping", PingServerResource.class);
-    // Collections
-    router.attach(ROOT_URI + "{collections}", GlobalStoresServerResource.class);
-    router.attach(ROOT_URI + "{collections}/{entity_id}", GlobalStoreServerResource.class);
-    router.attach(ROOT_URI + "{collections}?{query}", GaeDummyServerResource.class);
-    router.attach(ROOT_URI + "{collections}/{entity_id}/{relationship}?{query}", GaeDummyServerResource.class);
-    router.attach(ROOT_URI + "{collections}/{first_entity_id}/{relationship}/{second_entity_id}", GaeLinkingServerResource.class);
     // Groups
     router.attach(ROOT_URI + "groups", GaeDummyServerResource.class);
     router.attach(ROOT_URI + "groups/group_name", GaeDummyServerResource.class);
@@ -93,6 +87,12 @@ public class DreamcodeApplication extends Application {
     router.attach(ROOT_URI + "shares/{share_id}", GaeDummyServerResource.class);
     router.attach(ROOT_URI + "shares/{share_id}/accesses/{user_id}?access={access_type}", GaeDummyServerResource.class); // Access types: read, write, read_write
     router.attach(ROOT_URI + "shares/{share_id}/{entity_id}", GaeDummyServerResource.class); // Add remove
+    // Collections
+    router.attach(ROOT_URI + "{collections}", GlobalStoresServerResource.class);
+    router.attach(ROOT_URI + "{collections}/{entity_id}", GlobalStoreServerResource.class);
+    router.attach(ROOT_URI + "{collections}?{query}", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "{collections}/{entity_id}/{relationship}?{query}", GaeDummyServerResource.class);
+    router.attach(ROOT_URI + "{collections}/{first_entity_id}/{relationship}/{second_entity_id}", GaeLinkingServerResource.class);
 
 //    guard.setNext(router);
 
