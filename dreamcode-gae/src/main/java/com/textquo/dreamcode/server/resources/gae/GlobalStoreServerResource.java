@@ -33,6 +33,7 @@ import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import com.textquo.dreamcode.server.resources.GlobalStoreResource;
 import com.textquo.dreamcode.server.services.DocumentService;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
+import com.textquo.twist.common.ObjectNotFoundException;
 import org.apache.commons.logging.Log;
 import org.json.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -173,21 +174,28 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
         responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
         String type = (String) getRequest().getAttributes().get("collections");
         String id = (String) getRequest().getAttributes().get("entity_id");
-        if(type == null || type.isEmpty() || type.equals("null") || type.equals("NULL")) {
-            response = new ErrorResponse();
-            ((ErrorResponse) response).setError("Must provide type as query parameter");
-            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-        } else {
-            Document doc = service.readDocument(type, Long.valueOf(id));
-            Long docId = doc.getId();
-            String docType = doc.getKind();
-            Map properties = doc.getFields();
-            DocumentResponse newDoc = new DocumentResponse();
-            newDoc.setId(String.valueOf(docId));
-            newDoc.setType(docType);
-            newDoc.put("properties", properties);
-            response = newDoc;
-            setStatus(Status.SUCCESS_OK);
+        try {
+            if(type == null || type.isEmpty() || type.equals("null") || type.equals("NULL")) {
+                response = new ErrorResponse();
+                ((ErrorResponse) response).setError("Must provide type as query parameter");
+                setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+            } else {
+                LOG.info("Finding document type="+type);
+                Document doc = service.readDocument(type, Long.valueOf(id));
+                Long docId = doc.getId();
+                String docType = doc.getKind();
+                Map properties = doc.getFields();
+                DocumentResponse newDoc = new DocumentResponse();
+                newDoc.setId(String.valueOf(docId));
+                newDoc.setType(docType);
+                newDoc.put("properties", properties);
+                response = newDoc;
+                setStatus(Status.SUCCESS_OK);
+            }
+        } catch (ObjectNotFoundException e){
+            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+        } catch (Exception e){
+            setStatus(Status.SERVER_ERROR_INTERNAL);
         }
         return response;
     };
