@@ -21,29 +21,17 @@
  */
 package com.textquo.dreamcode.client.publicstores;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.jsonp.client.JsonpRequestBuilder;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.textquo.dreamcode.client.DreamcodeCallback;
 import com.textquo.dreamcode.client.Routes;
-import com.textquo.dreamcode.client.utils.JsniHelper;
-import com.textquo.dreamcode.client.utils.JsonHelper;
 import org.restlet.client.Request;
 import org.restlet.client.Response;
 import org.restlet.client.Uniform;
 import org.restlet.client.data.MediaType;
 import org.restlet.client.data.Status;
 import org.restlet.client.resource.ClientResource;
-import org.restlet.client.resource.Result;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class GlobalStore {
     /**
@@ -53,7 +41,7 @@ public class GlobalStore {
      * @param callback
      */
     public void add(String type, String id, String jsonObject, final DreamcodeCallback callback){
-        String url = Routes.DREAMCODE_API + Routes.PUBLIC_STORE_API + "?type=" + type + "&id=" + id;
+        String url = Routes.DREAMCODE + Routes.COLLECTIONS + "?type=" + type + "&id=" + id;
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
         try{
             builder.setHeader("content-type", "application/json");
@@ -74,7 +62,7 @@ public class GlobalStore {
             callback.failure(new Throwable(e.getMessage()));
         }
         // TODO: Make this code below work:
-//        ClientResource resource = new ClientResource(Routes.DREAMCODE_API + Routes.PUBLIC_STORE_API);
+//        ClientResource resource = new ClientResource(Routes.DREAMCODE + Routes.COLLECTIONS);
 //        resource.setOnResponse(new Uniform() {
 //            public void handle(Request request, Response response) {
 //                try {
@@ -107,7 +95,7 @@ public class GlobalStore {
      * @param callback
      */
     public void find(String type, String id, final DreamcodeCallback callback){
-        final ClientResource resource = new ClientResource(Routes.DREAMCODE_API + Routes.PUBLIC_STORE_API);
+        final ClientResource resource = new ClientResource(Routes.DREAMCODE + Routes.COLLECTIONS);
         resource.setOnResponse(new Uniform() {
             public void handle(Request request, Response response) {
                 try {
@@ -129,7 +117,7 @@ public class GlobalStore {
     }
 
     public void findAll(String type, final DreamcodeCallback callback){
-        final ClientResource resource = new ClientResource(Routes.DREAMCODE_API + Routes.PUBLIC_STORES_API);
+        final ClientResource resource = new ClientResource(Routes.DREAMCODE + Routes.PUBLIC_STORES_API);
         resource.setOnResponse(new Uniform() {
             public void handle(Request request, Response response) {
                 try {

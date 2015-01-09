@@ -10,7 +10,7 @@ import org.restlet.client.resource.ClientResource;
 
 public class Shares {
 
-    private static final String SHARE_BASE_URL = Routes.DREAMCODE_API + Routes.SHARES_API;
+    private static final String SHARE_BASE_URL = Routes.DREAMCODE + Routes.SHARES;
 
     private ClientResource resource;
 

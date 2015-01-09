@@ -22,13 +22,11 @@
 package com.textquo.dreamcode.client;
 
 public class Routes {
-    public static String DREAMCODE_API      = "";
-    public static String ACCOUNTS_API       = "/accounts";
-    public static String EMAILS_API         = "/emails";
-    public static String STORES_API         = "/stores";
-    public static String PUBLIC_STORE_API  = "/publicstore";
-    public static String PUBLIC_STORES_API  = "/publicstores";
-    public static String SHARES_API         = "/share";
-    public static String TASKS_API          = "/tasks";
-    public static String PAYMENST_API       = "/payments";
+    public static String DREAMCODE          = "";
+    public static String ACCOUNTS           = "/accounts";
+    public static String EMAILS             = "/emails";
+    public static String COLLECTIONS        = "/collections";
+    public static String SHARES             = "/share";
+    public static String TASKS              = "/tasks";
+    public static String PAYMENTS           = "/payments";
 }

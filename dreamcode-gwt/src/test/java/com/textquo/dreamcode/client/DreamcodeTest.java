@@ -30,7 +30,7 @@ public class DreamcodeTest extends GWTTestCase {
         final String jsonObject = "{}";
         String type = "test";
         String id = "1";
-        //String url = URL_BASE + Routes.DREAMCODE_API + Routes.PUBLIC_STORE_API + "?type=" + type + "&id=" + id;
+        //String url = URL_BASE + Routes.DREAMCODE + Routes.COLLECTIONS + "?type=" + type + "&id=" + id;
         String url = URL_BASE;
         RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, url);
         try{
@@ -51,7 +51,7 @@ public class DreamcodeTest extends GWTTestCase {
         }
     }
     public void testGlobalStoreAdd(){
-        String url = URL_BASE; //Routes.DREAMCODE_API + Routes.PUBLIC_STORE_API
+        String url = URL_BASE; //Routes.DREAMCODE + Routes.COLLECTIONS
         ClientResource resource = new ClientResource(url);
         resource.setOnResponse(new Uniform() {
             public void handle(Request request, Response response) {
