@@ -53,6 +53,7 @@ import com.github.restdriver.serverdriver.matchers.HasStatusCode;
 import static com.github.restdriver.serverdriver.Json.*;
 import static com.github.restdriver.serverdriver.Matchers.*;
 import static com.github.restdriver.serverdriver.RestServerDriver.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -162,9 +163,8 @@ public class DreamcodeApplicationTestCase {
         Response getResponse = get("http://localhost:8080/test", body("", "application/json"));
 
         assertThat(postResponse, hasStatusCode(200));
-
-        //assertThat(getResponse, hasResponseBody(is(toSave)));
         assertThat(getResponse, hasStatusCode(200));
+        assertThat(getResponse.asJson(), hasJsonPath("count", equalTo(1)));
     }
 
     private String readAllAndClose(InputStream is) throws Exception {
