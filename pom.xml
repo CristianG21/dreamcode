@@ -21,12 +21,13 @@
     <modules>
         <module>dreamcode-gwt</module>
         <module>dreamcode-gae</module>
+        <module>dreamcode-integration-test</module>
     </modules>
 
     <properties>
         <!-- GWT -->
-        <!-- Set to 2.5.1 for Errai compatibility -->
-        <gwt.version>2.5.1</gwt.version>
+        <!-- Set to 2.5.0 for Errai compatibility -->
+        <gwt.version>2.5.0</gwt.version>
         <!-- GAE -->
         <version.appengine>1.9.17a</version.appengine>
         <version.com.google.gae.api>1.9.17a</version.com.google.gae.api>
