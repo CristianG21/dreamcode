@@ -25,7 +25,8 @@
 
     <properties>
         <!-- GWT -->
-        <gwt.version>2.7.0</gwt.version>
+        <!-- Set to 2.5.1 for Errai compatibility -->
+        <gwt.version>2.5.1</gwt.version>
         <!-- GAE -->
         <version.appengine>1.9.17a</version.appengine>
         <version.com.google.gae.api>1.9.17a</version.com.google.gae.api>
@@ -60,6 +61,16 @@
 
     <!-- Maven 2 Repositories -->
     <repositories>
+        <repository>
+            <id>mvnrepository</id>
+            <url>http://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
         <repository>
             <id>jboss-public-repository-group</id>
             <name>JBoss Public Repository Group</name>
@@ -186,5 +197,13 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>bintray-textquo-maven-dreamcode</id>
+            <name>oss-jfrog-artifactory-snapshots</name>
+            <url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
