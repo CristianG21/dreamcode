@@ -1,5 +1,7 @@
 # This is under development
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/textquo/dreamcode?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Read about dreamcode here: http://nobackend.org/dreamcode.html
 
 ## The concept
