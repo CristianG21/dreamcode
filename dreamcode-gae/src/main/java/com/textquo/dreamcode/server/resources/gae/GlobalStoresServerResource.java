@@ -29,6 +29,7 @@ import com.textquo.dreamcode.server.domain.rest.DocumentResponse;
 import com.textquo.dreamcode.server.domain.rest.ErrorResponse;
 import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.restlet.data.Status;
@@ -41,6 +42,7 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -63,7 +65,7 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
      * @return
      */
     @Post("json")
-    public Map add(Representation entity){
+    public Map add(Representation entity) {
         DocumentResponse response = new DocumentResponse();
         Series<Header> responseHeaders = (Series<Header>)
                 getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
@@ -73,19 +75,8 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
                     responseHeaders);
         }
         responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
-
         String type = (String) getRequest().getAttributes().get("collections");
-
-        //Preconditions.checkNotNull(type, "Object type cannot be null");
-        //Preconditions.checkNotNull(entity, "Object cannot be null");
-
         // TODO - Simplify this
-//        if(id == null || id.isEmpty() || id.equals("null") || id.equals("NULL")) {
-//            response = new ErrorResponse();
-//            ((ErrorResponse) response).setError("Must provide id as path parameter");
-//            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-//        }
-//
         if(type == null || type.isEmpty() || type.equals("null") || type.equals("NULL")) {
             response = new ErrorResponse();
             ((ErrorResponse) response).setError("Must provide type as query parameter");
@@ -93,37 +84,35 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
         } else {
             if(entity != null){
                 LOG.info("Object type=" + type);
-                try{
-                    JsonRepresentation represent = new JsonRepresentation(entity);
-                    JSONObject jsonobject = represent.getJsonObject();
+                JsonRepresentation represent = null;
+                JSONObject jsonobject = null;
+                try {
+                    represent = new JsonRepresentation(entity);
+                    jsonobject = represent.getJsonObject();
                     String jsonText = jsonobject.toString();
-
                     Map<String,Object> dreamObject = JSONHelper.parseJson(jsonText);
-                    dreamObject.put("__key__", null); // auto-generate
-                    dreamObject.put("__kind__", type);
-                    Key key = store().put(dreamObject);
-
-                    response.setId(String.valueOf(key.getId()));
-                    response.setType(type);
-
-                    setStatus(Status.SUCCESS_OK);
-                } catch (ParseException e){
-                    ((ErrorResponse) response).setError("Bad JSON Request object");
-                    setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-                    return response;
-                } catch (Exception e){
-                    ((ErrorResponse) response).setError("Internal Server Error");
+                    if(dreamObject != null){
+                        dreamObject.put("__key__", null); // auto-generate
+                        dreamObject.put("__kind__", type);
+                        Key key = store().put(dreamObject);
+                        response.setId(String.valueOf(key.getId()));
+                        response.setType(type);
+                        setStatus(Status.SUCCESS_OK);
+                    } else {
+                        setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                     setStatus(Status.SERVER_ERROR_INTERNAL);
                     return response;
-                } finally {
-
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    setStatus(Status.SERVER_ERROR_INTERNAL);
+                    return response;
                 }
             } else {
-                response = new ErrorResponse();
-                ((ErrorResponse) response).setError("Must provide JSON document to store");
                 setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
             }
-
         }
         return response;
     };

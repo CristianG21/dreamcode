@@ -126,18 +126,16 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
                         id = String.valueOf(count);
                     }
                     Map<String,Object> dreamObject = JSONHelper.parseJson(jsonText);
-                    dreamObject.put("__key__", id);
-                    dreamObject.put("__kind__", type);
-                    Key key = store().put(dreamObject);
-
-                    response.setId(key.getName());
-                    response.setType(type);
-
+                    if(dreamObject != null){
+                        dreamObject.put("__key__", id);
+                        dreamObject.put("__kind__", type);
+                        Key key = store().put(dreamObject);
+                        response.setId(key.getName());
+                        response.setType(type);
+                    } else {
+                        setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+                    }
                     setStatus(Status.SUCCESS_OK);
-                } catch (ParseException e){
-                    ((ErrorResponse) response).setError("Bad JSON Request object");
-                    setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-                    return response;
                 } catch (Exception e){
                     ((ErrorResponse) response).setError("Internal Server Error");
                     setStatus(Status.SERVER_ERROR_INTERNAL);

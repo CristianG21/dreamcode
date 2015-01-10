@@ -33,26 +33,30 @@ import java.util.logging.Logger;
 public class JSONHelper {
     private static final Logger LOG
             = Logger.getLogger(JSONHelper.class.getName());
-    public static Map<String,Object> parseJson(String jsonText) throws ParseException {
+    public static Map<String,Object> parseJson(String jsonText) {
         Map<String,Object> json = null;
-        org.json.simple.parser.JSONParser parser = new org.json.simple.parser.JSONParser();
-        ContainerFactory containerFactory = new ContainerFactory(){
-            public List creatArrayContainer() {
-                return new LinkedList();
+        try {
+            org.json.simple.parser.JSONParser parser = new org.json.simple.parser.JSONParser();
+            ContainerFactory containerFactory = new ContainerFactory(){
+                public List creatArrayContainer() {
+                    return new LinkedList();
+                }
+                public Map createObjectContainer() {
+                    return new LinkedHashMap();
+                }
+            };
+            json = (Map<String,Object> )parser.parse(jsonText, containerFactory);
+            Iterator iter = json.entrySet().iterator();
+            LOG.info("==iterate result==");
+            while(iter.hasNext()){
+                Map.Entry entry = (Map.Entry)iter.next();
+                LOG.info(entry.getKey() + "=>" + entry.getValue());
             }
-            public Map createObjectContainer() {
-                return new LinkedHashMap();
-            }
-        };
-        json = (Map<String,Object> )parser.parse(jsonText, containerFactory);
-        Iterator iter = json.entrySet().iterator();
-        LOG.info("==iterate result==");
-        while(iter.hasNext()){
-            Map.Entry entry = (Map.Entry)iter.next();
-            LOG.info(entry.getKey() + "=>" + entry.getValue());
+            LOG.info("==toJSONString()==");
+            LOG.info(org.json.simple.JSONValue.toJSONString(json));
+        } catch (ParseException e){
+            e.printStackTrace();
         }
-        LOG.info("==toJSONString()==");
-        LOG.info(org.json.simple.JSONValue.toJSONString(json));
         return json;
     }
 

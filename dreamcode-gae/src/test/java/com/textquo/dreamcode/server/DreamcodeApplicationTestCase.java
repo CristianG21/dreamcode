@@ -83,6 +83,7 @@ public class DreamcodeApplicationTestCase {
                         "org.restlet.gae:org.restlet.ext.jackson:2.2.1",
                         "org.restlet.gae:org.restlet.ext.json:2.2.1",
                         "com.googlecode.json-simple:json-simple:1.1.1",
+                        "com.textquo:twist:0.0.1-SNAPSHOT",
                         "com.squareup.dagger:dagger:1.2.2").withTransitivity().asFile();
         File[] sdkFile = Maven.resolver().loadPomFromFile("../pom.xml")
                 .importDependencies(ScopeType.TEST)
@@ -93,20 +94,47 @@ public class DreamcodeApplicationTestCase {
                 .addAsLibraries(file)
                 .addAsLibraries(sdkFile)
                 .addClass(org.restlet.ext.servlet.ServerServlet.class)
+                // Domain Models
                 .addClass(com.textquo.dreamcode.server.DreamcodeApplication.class)
+                .addClass(com.textquo.dreamcode.server.domain.Document.class)
+                .addClass(com.textquo.dreamcode.server.domain.User.class)
+                .addClass(com.textquo.dreamcode.server.domain.rest.AppStatusResponse.class)
+                .addClass(com.textquo.dreamcode.server.domain.rest.DocumentResponse.class)
+                .addClass(com.textquo.dreamcode.server.domain.rest.ErrorResponse.class)
+                .addClass(com.textquo.dreamcode.server.domain.rest.ResponseDreamObject.class)
+                        // Resources
                 .addClass(com.textquo.dreamcode.server.resources.gae.RootServerResource.class)
+                .addClass(com.textquo.dreamcode.server.resources.gae.StatusServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.gae.PingServerResource.class)
+                .addClass(com.textquo.dreamcode.server.resources.gae.GaeDummyServerResource.class)
+                .addClass(com.textquo.dreamcode.server.resources.gae.GaeLinkingServerResource.class)
+                .addClass(com.textquo.dreamcode.server.resources.gae.GaeTokenServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.gae.GlobalStoreServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.gae.GlobalStoresServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.BaseResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.GlobalStoreResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.UserResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.UsersResource.class)
+                .addClass(com.textquo.dreamcode.server.resources.LinkingResource.class)
+                // Services
+                .addClass(com.textquo.dreamcode.server.services.UserService.class)
+                .addClass(com.textquo.dreamcode.server.services.gae.GaeUserService.class)
                 .addClass(com.textquo.dreamcode.server.services.ShardedCounter.class)
                 .addClass(com.textquo.dreamcode.server.services.ShardedCounterService.class)
+                .addClass(com.textquo.dreamcode.server.services.DocumentService.class)
+                .addClass(com.textquo.dreamcode.server.services.gae.GaeDocumentService.class)
+                // Repositories
+                .addClass(com.textquo.dreamcode.server.repository.DocumentRepository.class)
+                .addClass(com.textquo.dreamcode.server.repository.gae.GaeDocumentRepository.class)
                 .addClass(com.textquo.dreamcode.server.guice.SelfInjectingServerResource.class)
                 .addClass(com.textquo.dreamcode.server.guice.SelfInjectingServerResourceModule.class)
                 .addClass(com.textquo.dreamcode.server.guice.GuiceConfigModule.class)
+                        // Exceptions
+                .addClass(com.textquo.dreamcode.server.common.DreamcodeException.class)
+                .addClass(com.textquo.dreamcode.server.services.common.DocumentException.class)
+                .addClass(com.textquo.dreamcode.server.services.common.AccessNotAllowedException.class)
+                .addClass(com.textquo.dreamcode.server.JSONHelper.class)
+
                 .setWebXML("web.xml")
                 .addAsWebInfResource("appengine-web.xml")
                 .addAsWebInfResource("logging.properties");
@@ -135,7 +163,7 @@ public class DreamcodeApplicationTestCase {
 
         assertThat(postResponse, hasStatusCode(200));
 
-        //assertThat(getResponse, hasResponseBody(is("{ 'hello' : 'world' }")));
+        //assertThat(getResponse, hasResponseBody(is(toSave)));
         assertThat(getResponse, hasStatusCode(200));
     }
 
