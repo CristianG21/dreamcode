@@ -18,6 +18,13 @@
 	<url>http://www.github.com/textquo/dreamcode</url>
 
 	<dependencies>
+		<!-- GWT Arquilian -->
+		<dependency>
+			<groupId>org.jboss.arquillian.extension</groupId>
+			<artifactId>arquillian-gwt</artifactId>
+			<version>1.0.0.Alpha2</version>
+			<scope>test</scope>
+		</dependency>
 		<!-- Arquillian Testing -->
 		<dependency>
 			<groupId>com.google.appengine</groupId>
@@ -44,13 +51,6 @@
 			<version>2.2.0-beta-1</version>
 			<scope>test</scope>
 			<type>pom</type>
-		</dependency>
-		<!-- GWT Arquilian -->
-		<dependency>
-			<groupId>org.jboss.arquillian.extension</groupId>
-			<artifactId>arquillian-gwt</artifactId>
-			<version>1.0.0.Alpha2</version>
-			<scope>test</scope>
 		</dependency>
 		<!-- GWT -->
 		<dependency>
