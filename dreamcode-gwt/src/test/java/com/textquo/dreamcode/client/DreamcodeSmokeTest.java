@@ -1,10 +1,13 @@
 package com.textquo.dreamcode.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.junit.client.GWTTestCase;
 //import junit.framework.Assert;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.restlet.client.Request;
 import org.restlet.client.Response;
 import org.restlet.client.Uniform;
@@ -20,7 +23,7 @@ import java.io.IOException;
  */
 public class DreamcodeSmokeTest extends GWTTestCase {
 
-    private static String URL_BASE = "http://localhost:8080";
+    private static String URL_BASE = "http://localhost:8080/rest/";
 
     @Override
     public String getModuleName() {
@@ -58,23 +61,38 @@ public class DreamcodeSmokeTest extends GWTTestCase {
     }
     public void testCollections_Root_Get(){
         String type = "test";
-        String url = URL_BASE + Routes.DREAMCODE  + "/" + type;
-        final Status[] status = new Status[1];
-        ClientResource resource = new ClientResource(url);
-        resource.setOnResponse(new Uniform() {
-            public void handle(Request request, Response response) {
-                status[0] = response.getStatus();
-                String body = null;
-                try {
-                    body = response.getEntity().getText();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                assertEquals(Status.SUCCESS_OK, status[0]);
-                assertNotNull(body);
-                assertTrue(!body.isEmpty());
+        String url = URL_BASE + Routes.DREAMCODE  + type;
+//        final Status[] status = new Status[1];
+//        ClientResource resource = new ClientResource(url);
+//        resource.setOnResponse(new Uniform() {
+//            public void handle(Request request, Response response) {
+//                status[0] = response.getStatus();
+//                String body = null;
+//                try {
+//                    body = response.getEntity().getText();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                assertEquals(Status.SUCCESS_OK, status[0]);
+//                assertNotNull(body);
+//                assertTrue(!body.isEmpty());
+//            }
+//        });
+//        resource.get(MediaType.APPLICATION_JSON);
+//        Response response = resource.getResponse();
+//        assertEquals(Status.SUCCESS_OK, response.getStatus());
+        JsonpRequestBuilder builder = new JsonpRequestBuilder();
+        builder.requestObject(url, new AsyncCallback<JavaScriptObject>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                fail("Error on request:" + throwable.getMessage());
+            }
+
+            @Override
+            public void onSuccess(JavaScriptObject javaScriptObject) {
+                System.out.println(javaScriptObject);
+
             }
         });
-        resource.get(MediaType.APPLICATION_JSON);
     }
 }
