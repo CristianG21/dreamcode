@@ -25,13 +25,15 @@ import com.google.appengine.api.datastore.Key;
 import com.google.inject.Inject;
 import com.textquo.dreamcode.server.JSONHelper;
 import com.textquo.dreamcode.server.domain.Document;
+import com.textquo.dreamcode.server.domain.rest.CursorResponse;
 import com.textquo.dreamcode.server.domain.rest.DocumentResponse;
 import com.textquo.dreamcode.server.domain.rest.ErrorResponse;
 import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
+import com.textquo.twist.types.Cursor;
+import com.textquo.twist.types.ListResult;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.ParseException;
 import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
 import org.restlet.engine.header.HeaderConstants;
@@ -39,12 +41,10 @@ import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
-import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static com.textquo.twist.ObjectStoreService.store;
@@ -54,6 +54,8 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
 
     @Inject
     ShardedCounterService shardCounterService;
+
+    private static final int DEFAULT_STORE_LIMIT = 10;
 
     private static final Logger LOG
             = Logger.getLogger(GlobalStoresServerResource.class.getName());
@@ -131,32 +133,73 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
         responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
 
         String type = (String) getRequest().getAttributes().get("collections");
+        String ql = getQueryValue("ql");
+        String cursor = getQueryValue("cursor");
+        String prev = getQueryValue("prev");
+        String uri = getRequest().getOriginalRef().toString();
 
         LOG.info("Query for type=" + type);
+        String limit = getQueryValue("limit");
+        LOG.info("Limit=" + limit);
+
+        int resultLimit = DEFAULT_STORE_LIMIT;
+        if(limit != null){
+            resultLimit = Integer.valueOf(limit);
+        }
 
         try {
-            Iterator<Document> it = store().find(Document.class, type).limit(100).now();
-            int count = 0;
-            while(it.hasNext()){
-                Document doc = it.next();
-                Long docId = doc.getId();
-                String docType = doc.getKind();
-                Map properties = doc.getFields();
-                DocumentResponse newDoc = new DocumentResponse();
-                newDoc.setId(String.valueOf(docId));
-                newDoc.setType(docType);
-                newDoc.put("properties", properties);
-                response.put("item" + count, newDoc);
-                count++;
+            response.put("action", "get");
+            response.put("application", ""); // TODO
+
+            Map params = new LinkedHashMap();
+            params.put("ql", ql);
+            response.put("params", params);
+
+            params.put("path", "/" + type);
+            params.put("uri", uri); // TODO
+
+            List<DocumentResponse> entities = new LinkedList<>();
+            Cursor startCursor = new Cursor(cursor);
+
+            ListResult<Document> result = store().find(Document.class, type)
+                    .withCursor(startCursor)
+                    .limit(resultLimit).asList();
+
+            long count = 0;
+            boolean hasNext;
+            String nextCursor = result.getWebsafeCursor();
+            List<Document> resultList = result.getList();
+            if(!resultList.isEmpty()){
+                for (Document doc : result.getList()){
+                    Long docId = doc.getId();
+                    String docType = doc.getKind();
+                    Map properties = doc.getFields();
+                    DocumentResponse newDoc = new DocumentResponse();
+                    newDoc.setId(String.valueOf(docId));
+                    newDoc.setType(docType);
+                    newDoc.put("propertyMap", properties);
+                    newDoc.put("metadata", null);
+                    entities.add(newDoc);
+                    count++;
+                }
+                hasNext = true;
+            } else {
+                hasNext = false;
             }
-            response.put("count", count);
-            response.put("has_next", false);
+            response.put("entities", entities);
+            response.put("timestamp", new Date().getTime());
+            response.put("applicationName", ""); // TODO
+            CursorResponse cursorItem = new CursorResponse();
+            cursorItem.setPrev(prev);
+            cursorItem.setHasNext(hasNext);
+            cursorItem.setNext(nextCursor);
+            cursorItem.setTotal(count);
+            response.put("cursor", cursorItem);
             setStatus(Status.SUCCESS_OK);
         } catch (Exception e){
             e.printStackTrace();
             setStatus(Status.SERVER_ERROR_INTERNAL);
         }
-
         return response;
     }
 }

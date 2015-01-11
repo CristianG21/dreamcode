@@ -186,7 +186,7 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
                 DocumentResponse newDoc = new DocumentResponse();
                 newDoc.setId(String.valueOf(docId));
                 newDoc.setType(docType);
-                newDoc.put("properties", properties);
+                newDoc.put("propertyMap", properties);
                 response = newDoc;
                 setStatus(Status.SUCCESS_OK);
             }

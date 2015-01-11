@@ -26,9 +26,9 @@ package com.textquo.dreamcode.server.domain.rest;
  */
 public class DocumentResponse extends ResponseDreamObject {
     public void setId(String id){
-        put("_id", id);
+        put("uuid", id);
     }
     public void setType(String type){
-        put("_type", type);
+        put("type", type);
     }
 }
