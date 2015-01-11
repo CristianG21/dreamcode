@@ -21,14 +21,15 @@
  */
 package com.textquo.dreamcode.server.domain.rest;
 
-/**
- * Represent one-or-more Document reponse
- */
-public class DocumentResponse extends ResponseDreamObject {
-    public void setId(String id){
-        put("uuid", id);
+public class AppStatusDreamcodeResponse extends DreamcodeResponse {
+    public AppStatusDreamcodeResponse(){}
+
+    public void setName(String name){
+        put("name", name);
     }
-    public void setType(String type){
-        put("type", type);
+
+    public void setVersion(String version){
+        put("version", version);
     }
+
 }

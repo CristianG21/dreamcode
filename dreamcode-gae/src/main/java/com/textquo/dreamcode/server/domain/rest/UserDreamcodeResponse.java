@@ -24,5 +24,5 @@ package com.textquo.dreamcode.server.domain.rest;
 /**
  * Represents one-or-more Users
  */
-public class UserResponse extends ResponseDreamObject {
+public class UserDreamcodeResponse extends DreamcodeResponse {
 }

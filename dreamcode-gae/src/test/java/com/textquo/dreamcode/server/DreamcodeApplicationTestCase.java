@@ -22,12 +22,10 @@
 package com.textquo.dreamcode.server;
 
 import com.github.restdriver.serverdriver.http.response.Response;
-import com.google.appengine.repackaged.com.google.api.client.http.*;
-import com.google.appengine.repackaged.com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.appengine.repackaged.com.google.api.client.http.json.JsonHttpContent;
-import com.google.appengine.repackaged.com.google.api.client.json.JsonFactory;
-import com.google.appengine.repackaged.com.google.api.client.json.JsonObjectParser;
-import com.google.appengine.repackaged.com.google.api.client.json.jackson.JacksonFactory;
+import com.textquo.dreamcode.server.domain.rest.AppStatusDreamcodeResponse;
+import com.textquo.dreamcode.server.domain.rest.DocumentDreamcodeResponse;
+import com.textquo.dreamcode.server.domain.rest.DreamcodeResponse;
+import com.textquo.dreamcode.server.domain.rest.ErrorDreamcodeResponse;
 import com.textquo.dreamcode.server.guice.GuiceConfigModule;
 import com.textquo.dreamcode.server.resources.gae.PingServerResource;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -44,15 +42,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
 
 import static com.github.restdriver.serverdriver.RestServerDriver.*;
-import com.github.restdriver.serverdriver.http.response.Response;
-import com.github.restdriver.serverdriver.matchers.HasResponseBody;
-import com.github.restdriver.serverdriver.matchers.HasStatusCode;
-import static com.github.restdriver.serverdriver.Json.*;
 import static com.github.restdriver.serverdriver.Matchers.*;
-import static com.github.restdriver.serverdriver.RestServerDriver.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -99,10 +91,10 @@ public class DreamcodeApplicationTestCase {
                 .addClass(com.textquo.dreamcode.server.DreamcodeApplication.class)
                 .addClass(com.textquo.dreamcode.server.domain.Document.class)
                 .addClass(com.textquo.dreamcode.server.domain.User.class)
-                .addClass(com.textquo.dreamcode.server.domain.rest.AppStatusResponse.class)
-                .addClass(com.textquo.dreamcode.server.domain.rest.DocumentResponse.class)
-                .addClass(com.textquo.dreamcode.server.domain.rest.ErrorResponse.class)
-                .addClass(com.textquo.dreamcode.server.domain.rest.ResponseDreamObject.class)
+                .addClass(AppStatusDreamcodeResponse.class)
+                .addClass(DocumentDreamcodeResponse.class)
+                .addClass(ErrorDreamcodeResponse.class)
+                .addClass(DreamcodeResponse.class)
                         // Resources
                 .addClass(com.textquo.dreamcode.server.resources.gae.RootServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.gae.StatusServerResource.class)

@@ -25,9 +25,9 @@ import com.google.appengine.api.datastore.Key;
 import com.google.inject.Inject;
 import com.textquo.dreamcode.server.JSONHelper;
 import com.textquo.dreamcode.server.domain.Document;
-import com.textquo.dreamcode.server.domain.rest.CursorResponse;
-import com.textquo.dreamcode.server.domain.rest.DocumentResponse;
-import com.textquo.dreamcode.server.domain.rest.ErrorResponse;
+import com.textquo.dreamcode.server.domain.rest.CursorDreamcodeResponse;
+import com.textquo.dreamcode.server.domain.rest.DocumentDreamcodeResponse;
+import com.textquo.dreamcode.server.domain.rest.ErrorDreamcodeResponse;
 import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
 import com.textquo.twist.types.Cursor;
@@ -68,7 +68,7 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
      */
     @Post("json")
     public Map add(Representation entity) {
-        DocumentResponse response = new DocumentResponse();
+        DocumentDreamcodeResponse response = new DocumentDreamcodeResponse();
         Series<Header> responseHeaders = (Series<Header>)
                 getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
         if (responseHeaders == null) {
@@ -80,8 +80,8 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
         String type = (String) getRequest().getAttributes().get("collections");
         // TODO - Simplify this
         if(type == null || type.isEmpty() || type.equals("null") || type.equals("NULL")) {
-            response = new ErrorResponse();
-            ((ErrorResponse) response).setError("Must provide type as query parameter");
+            response = new ErrorDreamcodeResponse();
+            ((ErrorDreamcodeResponse) response).setError("Must provide type as query parameter");
             setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
         } else {
             if(entity != null){
@@ -122,7 +122,7 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
 
     @Get("json")
     public Map list(Representation entity){
-        DocumentResponse response = new DocumentResponse();
+        DocumentDreamcodeResponse response = new DocumentDreamcodeResponse();
         Series<Header> responseHeaders = (Series<Header>)
                 getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
         if (responseHeaders == null) {
@@ -158,7 +158,7 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
             params.put("path", "/" + type);
             params.put("uri", uri); // TODO
 
-            List<DocumentResponse> entities = new LinkedList<>();
+            List<DocumentDreamcodeResponse> entities = new LinkedList<>();
             Cursor startCursor = new Cursor(cursor);
 
             ListResult<Document> result = store().find(Document.class, type)
@@ -174,7 +174,7 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
                     Long docId = doc.getId();
                     String docType = doc.getKind();
                     Map properties = doc.getFields();
-                    DocumentResponse newDoc = new DocumentResponse();
+                    DocumentDreamcodeResponse newDoc = new DocumentDreamcodeResponse();
                     newDoc.setId(String.valueOf(docId));
                     newDoc.setType(docType);
                     newDoc.put("propertyMap", properties);
@@ -189,7 +189,7 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
             response.put("entities", entities);
             response.put("timestamp", new Date().getTime());
             response.put("applicationName", ""); // TODO
-            CursorResponse cursorItem = new CursorResponse();
+            CursorDreamcodeResponse cursorItem = new CursorDreamcodeResponse();
             cursorItem.setPrev(prev);
             cursorItem.setHasNext(hasNext);
             cursorItem.setNext(nextCursor);

@@ -1,6 +1,6 @@
 package com.textquo.dreamcode.server.resources.gae;
 
-import com.textquo.dreamcode.server.domain.rest.AppStatusResponse;
+import com.textquo.dreamcode.server.domain.rest.AppStatusDreamcodeResponse;
 import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import org.restlet.resource.Get;
 
@@ -13,7 +13,7 @@ public class GaeDummyServerResource extends SelfInjectingServerResource {
     @Get("json")
     public Map represent() {
         // TODO - Get name and version from properties file
-        AppStatusResponse status = new AppStatusResponse();
+        AppStatusDreamcodeResponse status = new AppStatusDreamcodeResponse();
         status.setName("Dreamcode Application");
         status.setVersion("1.0.0-SNAPSHOT");
         return status;

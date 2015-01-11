@@ -1,6 +1,6 @@
 package com.textquo.dreamcode.server.domain.rest;
 
-public class CursorResponse extends ResponseDreamObject {
+public class CursorDreamcodeResponse extends DreamcodeResponse {
     public void setPrev(String prevCursor){
         put("prev", prevCursor);
     }

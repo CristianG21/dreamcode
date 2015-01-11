@@ -21,11 +21,14 @@
  */
 package com.textquo.dreamcode.server.domain.rest;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 /**
- * Base Response object
+ * Represent one-or-more Document reponse
  */
-public class ResponseDreamObject extends LinkedHashMap<String,Object> {}
-
+public class DocumentDreamcodeResponse extends DreamcodeResponse {
+    public void setId(String id){
+        put("uuid", id);
+    }
+    public void setType(String type){
+        put("type", type);
+    }
+}

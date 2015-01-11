@@ -21,15 +21,11 @@
  */
 package com.textquo.dreamcode.server.domain.rest;
 
-public class AppStatusResponse extends ResponseDreamObject {
-    public AppStatusResponse(){}
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
-    public void setName(String name){
-        put("name", name);
-    }
+/**
+ * Base Response object
+ */
+public class DreamcodeResponse extends LinkedHashMap<String,Object> {}
 
-    public void setVersion(String version){
-        put("version", version);
-    }
-
-}

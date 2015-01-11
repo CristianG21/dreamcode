@@ -22,26 +22,19 @@
 package com.textquo.dreamcode.server.resources.gae;
 
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.log.LogService;
-import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.textquo.dreamcode.server.JSONHelper;
 import com.textquo.dreamcode.server.domain.Document;
-import com.textquo.dreamcode.server.domain.rest.DocumentResponse;
-import com.textquo.dreamcode.server.domain.rest.ErrorResponse;
+import com.textquo.dreamcode.server.domain.rest.DocumentDreamcodeResponse;
+import com.textquo.dreamcode.server.domain.rest.ErrorDreamcodeResponse;
 import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import com.textquo.dreamcode.server.resources.GlobalStoreResource;
 import com.textquo.dreamcode.server.services.DocumentService;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
 import com.textquo.twist.common.ObjectNotFoundException;
-import org.apache.commons.logging.Log;
 import org.json.JSONObject;
-import org.json.simple.parser.ParseException;
 import org.restlet.data.Form;
-import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
-import org.restlet.resource.*;
 import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
 import org.restlet.engine.header.HeaderConstants;
@@ -49,7 +42,6 @@ import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.util.Series;
 
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.textquo.twist.ObjectStoreService.store;
@@ -83,7 +75,7 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
 
     @Override
     public Map add(Representation entity){
-        DocumentResponse response = new DocumentResponse();
+        DocumentDreamcodeResponse response = new DocumentDreamcodeResponse();
         Series<Header> responseHeaders = (Series<Header>)
                 getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
         if (responseHeaders == null) {
@@ -101,12 +93,12 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
 
         // TODO - Simplify this
         if(id == null || id.isEmpty() || id.equals("null") || id.equals("NULL")) {
-            response = new ErrorResponse();
-            ((ErrorResponse) response).setError("Must provide id as query parameter");
+            response = new ErrorDreamcodeResponse();
+            ((ErrorDreamcodeResponse) response).setError("Must provide id as query parameter");
             setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
         } else if(type == null || type.isEmpty() || type.equals("null") || type.equals("NULL")) {
-            response = new ErrorResponse();
-            ((ErrorResponse) response).setError("Must provide type as query parameter");
+            response = new ErrorDreamcodeResponse();
+            ((ErrorDreamcodeResponse) response).setError("Must provide type as query parameter");
             setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
         } else {
             if(entity != null){
@@ -137,15 +129,15 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
                     }
                     setStatus(Status.SUCCESS_OK);
                 } catch (Exception e){
-                    ((ErrorResponse) response).setError("Internal Server Error");
+                    ((ErrorDreamcodeResponse) response).setError("Internal Server Error");
                     setStatus(Status.SERVER_ERROR_INTERNAL);
                     return response;
                 } finally {
 
                 }
             } else {
-                response = new ErrorResponse();
-                ((ErrorResponse) response).setError("Must provide JSON document to store");
+                response = new ErrorDreamcodeResponse();
+                ((ErrorDreamcodeResponse) response).setError("Must provide JSON document to store");
                 setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
             }
 
@@ -155,13 +147,13 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
 
     @Override
     public Map update(Representation entity){
-        DocumentResponse response = new DocumentResponse();
+        DocumentDreamcodeResponse response = new DocumentDreamcodeResponse();
         return response;
     };
 
     @Override
     public Map find(){
-        DocumentResponse response = new DocumentResponse();
+        DocumentDreamcodeResponse response = new DocumentDreamcodeResponse();
         Series<Header> responseHeaders = (Series<Header>)
                 getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
         if (responseHeaders == null) {
@@ -174,8 +166,8 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
         String id = (String) getRequest().getAttributes().get("entity_id");
         try {
             if(type == null || type.isEmpty() || type.equals("null") || type.equals("NULL")) {
-                response = new ErrorResponse();
-                ((ErrorResponse) response).setError("Must provide type as query parameter");
+                response = new ErrorDreamcodeResponse();
+                ((ErrorDreamcodeResponse) response).setError("Must provide type as query parameter");
                 setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
             } else {
                 LOG.info("Finding document type="+type);
@@ -183,7 +175,7 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
                 Long docId = doc.getId();
                 String docType = doc.getKind();
                 Map properties = doc.getFields();
-                DocumentResponse newDoc = new DocumentResponse();
+                DocumentDreamcodeResponse newDoc = new DocumentDreamcodeResponse();
                 newDoc.setId(String.valueOf(docId));
                 newDoc.setType(docType);
                 newDoc.put("propertyMap", properties);
@@ -200,7 +192,7 @@ public class GlobalStoreServerResource extends SelfInjectingServerResource
 
     @Override
     public Map remove(Representation entity){
-        DocumentResponse response = new DocumentResponse();
+        DocumentDreamcodeResponse response = new DocumentDreamcodeResponse();
         return response;
     };
 
