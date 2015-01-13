@@ -28,7 +28,6 @@ import com.textquo.dreamcode.server.resources.gae.*;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
-import org.restlet.security.MapVerifier;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,9 +98,10 @@ public class DreamcodeApplication extends Application {
     router.attach(ROOT_URI + "shares/{share_id}/accesses/{user_id}?access={access_type}", GaeDummyServerResource.class); // Access types: read, write, read_write
     router.attach(ROOT_URI + "shares/{share_id}/{entity_id}", GaeDummyServerResource.class); // Add remove
     // Collections
-    router.attach(ROOT_URI + "{collections}", GlobalStoresServerResource.class);
-    router.attach(ROOT_URI + "{collections}/{entity_id}", GlobalStoreServerResource.class);
-    router.attach(ROOT_URI + "{collections}/{entity_id}?write_access_key=?{write_access_key}", GlobalStoreServerResource.class);
+    router.attach(ROOT_URI + "{collections}", GaeDataStoresServerResource.class);
+    router.attach(ROOT_URI + "{collections}/{entity_id}", GaeDataStoreServerResource.class);
+    router.attach(ROOT_URI + "{collections}/{entity_id}/", GaeDataStoreServerResource.class); // Keep this
+    router.attach(ROOT_URI + "{collections}/{entity_id}?write_access_key=?{write_access_key}", GaeDataStoreServerResource.class);
     router.attach(ROOT_URI + "{collections}?{query}", GaeDummyServerResource.class);
     router.attach(ROOT_URI + "{collections}/{entity_id}/{relationship}?{query}", GaeDummyServerResource.class);
     router.attach(ROOT_URI + "{collections}/{first_entity_id}/{relationship}/{second_entity_id}", GaeLinkingServerResource.class);

@@ -28,7 +28,7 @@ public class GaeDocumentRepository implements DocumentRepository {
     }
 
     @Override
-    public void delete(String type, String docId) {
+    public void delete(String type, Long docId) {
         Preconditions.checkNotNull(docId, "Null document id");
         store().delete(Document.class, type, docId);
     }

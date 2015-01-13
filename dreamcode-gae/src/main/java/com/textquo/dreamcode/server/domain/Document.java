@@ -21,11 +21,12 @@
  */
 package com.textquo.dreamcode.server.domain;
 
+import com.google.appengine.repackaged.com.google.gson.Gson;
+import com.textquo.dreamcode.server.JSONHelper;
 import com.textquo.twist.annotations.*;
+import org.boon.Str;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 public class Document {
@@ -56,6 +57,10 @@ public class Document {
 
     // Overrides all write access
     private boolean isPublicWrite = false;
+
+    private Date created;
+
+    private Date modified;
 
     @Flat
     private Map fields;
@@ -182,4 +187,43 @@ public class Document {
         return writeKeys.add(userId);
     }
 
+    public static Document createFrom(String jsonText){
+        Document entity = new Document();
+        Map<String,Object> map = JSONHelper.parseJson(jsonText);
+        Object id = map.get("_id");
+        if(id != null){
+            if(id instanceof Long){
+                entity.setId((Long) id);
+            }
+        }
+        Iterator<Map.Entry<String,Object>> it = map.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String,Object> entry = it.next();
+            String key = entry.getKey();
+            Object val = entry.getValue();
+            entity.setField(key, val);
+        }
+        return entity;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    @Override
+    public String toString(){
+        return new Gson().toJson(this);
+    }
 }

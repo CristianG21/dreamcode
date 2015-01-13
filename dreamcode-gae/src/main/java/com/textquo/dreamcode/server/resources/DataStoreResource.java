@@ -19,13 +19,22 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.domain.rest;
+package com.textquo.dreamcode.server.resources;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import com.textquo.dreamcode.server.domain.rest.EntityDTO;
+import org.restlet.representation.Representation;
+import org.restlet.resource.*;
 
-/**
- * Base Response object
- */
-public class DreamcodeResponse extends LinkedHashMap<String,Object> {}
+import java.util.Map;
+
+public interface DataStoreResource extends BaseResource {
+    @Post("json")
+    public EntityDTO add(Representation entity);
+    @Put("json")
+    public EntityDTO update(Representation entity);
+    @Get("json")
+    public EntityDTO find();
+    @Delete("json")
+    public void remove(Representation entity);
+}
 

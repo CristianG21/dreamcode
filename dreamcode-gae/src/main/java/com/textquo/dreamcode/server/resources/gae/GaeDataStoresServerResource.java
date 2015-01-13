@@ -21,19 +21,17 @@
  */
 package com.textquo.dreamcode.server.resources.gae;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.inject.Inject;
-import com.textquo.dreamcode.server.JSONHelper;
 import com.textquo.dreamcode.server.domain.Document;
-import com.textquo.dreamcode.server.domain.rest.CursorDreamcodeResponse;
-import com.textquo.dreamcode.server.domain.rest.DocumentDreamcodeResponse;
-import com.textquo.dreamcode.server.domain.rest.ErrorDreamcodeResponse;
+import com.textquo.dreamcode.server.domain.rest.EntityDTO;
 import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
-import com.textquo.dreamcode.server.services.ShardedCounterService;
+import com.textquo.dreamcode.server.resources.DataStoresResource;
+import com.textquo.dreamcode.server.services.DocumentService;
 import com.textquo.twist.types.Cursor;
 import com.textquo.twist.types.ListResult;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.data.Form;
 import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
 import org.restlet.engine.header.HeaderConstants;
@@ -50,16 +48,31 @@ import java.util.logging.Logger;
 import static com.textquo.twist.ObjectStoreService.store;
 
 // PATH: /{collections}
-public class GlobalStoresServerResource extends SelfInjectingServerResource {
+public class GaeDataStoresServerResource extends SelfInjectingServerResource
+    implements DataStoresResource {
 
     @Inject
-    ShardedCounterService shardCounterService;
+    DocumentService service;
 
     private static final int DEFAULT_STORE_LIMIT = 10;
 
     private static final Logger LOG
-            = Logger.getLogger(GlobalStoresServerResource.class.getName());
+            = Logger.getLogger(GaeDataStoresServerResource.class.getName());
 
+    @Override
+    public void doOptions(Representation entity) {
+        // Add additional headers to response
+        Form responseHeaders = (Form) getResponse().getAttributes().get("org.restlet.http.headers");
+        if (responseHeaders == null) {
+            responseHeaders = new Form();
+            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders);
+        }
+        responseHeaders.add("Access-Control-Allow-Origin", "*");
+        responseHeaders.add("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+        responseHeaders.add("Access-Control-Allow-Headers", "Content-Type");
+        responseHeaders.add("Access-Control-Allow-Credentials", "false");
+        responseHeaders.add("Access-Control-Max-Age", "60");
+    }
     /**
      * Post one or more entities. Entity id's will be auto-generated
      *
@@ -67,8 +80,8 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
      * @return
      */
     @Post("json")
-    public Map add(Representation entity) {
-        DocumentDreamcodeResponse response = new DocumentDreamcodeResponse();
+    public EntityDTO add(Representation entity) {
+        EntityDTO response = null;
         Series<Header> responseHeaders = (Series<Header>)
                 getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
         if (responseHeaders == null) {
@@ -80,8 +93,6 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
         String type = (String) getRequest().getAttributes().get("collections");
         // TODO - Simplify this
         if(type == null || type.isEmpty() || type.equals("null") || type.equals("NULL")) {
-            response = new ErrorDreamcodeResponse();
-            ((ErrorDreamcodeResponse) response).setError("Must provide type as query parameter");
             setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
         } else {
             if(entity != null){
@@ -92,13 +103,11 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
                     represent = new JsonRepresentation(entity);
                     jsonobject = represent.getJsonObject();
                     String jsonText = jsonobject.toString();
-                    Map<String,Object> dreamObject = JSONHelper.parseJson(jsonText);
-                    if(dreamObject != null){
-                        dreamObject.put("__key__", null); // auto-generate
-                        dreamObject.put("__kind__", type);
-                        Key key = store().put(dreamObject);
-                        response.setId(String.valueOf(key.getId()));
-                        response.setType(type);
+                    Document document = Document.createFrom(jsonText);
+                    if(document != null){
+                        document.setKind(type);
+                        store().put(document);
+                        response = EntityDTO.createFrom(document);
                         setStatus(Status.SUCCESS_OK);
                     } else {
                         setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
@@ -106,11 +115,9 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
                 } catch (IOException e) {
                     e.printStackTrace();
                     setStatus(Status.SERVER_ERROR_INTERNAL);
-                    return response;
                 } catch (JSONException e) {
                     e.printStackTrace();
                     setStatus(Status.SERVER_ERROR_INTERNAL);
-                    return response;
                 }
             } else {
                 setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
@@ -121,8 +128,8 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
 
 
     @Get("json")
-    public Map list(Representation entity){
-        DocumentDreamcodeResponse response = new DocumentDreamcodeResponse();
+    public List<EntityDTO> list(Representation entity){
+        List<EntityDTO> response = null;
         Series<Header> responseHeaders = (Series<Header>)
                 getResponseAttributes().get(HeaderConstants.ATTRIBUTE_HEADERS);
         if (responseHeaders == null) {
@@ -137,9 +144,9 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
         String cursor = getQueryValue("cursor");
         String prev = getQueryValue("prev");
         String uri = getRequest().getOriginalRef().toString();
+        String limit = getQueryValue("limit");
 
         LOG.info("Query for type=" + type);
-        String limit = getQueryValue("limit");
         LOG.info("Limit=" + limit);
 
         int resultLimit = DEFAULT_STORE_LIMIT;
@@ -148,17 +155,6 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
         }
 
         try {
-            response.put("action", "get");
-            response.put("application", ""); // TODO
-
-            Map params = new LinkedHashMap();
-            params.put("ql", ql);
-            response.put("params", params);
-
-            params.put("path", "/" + type);
-            params.put("uri", uri); // TODO
-
-            List<DocumentDreamcodeResponse> entities = new LinkedList<>();
             Cursor startCursor = new Cursor(cursor);
 
             ListResult<Document> result = store().find(Document.class, type)
@@ -171,30 +167,17 @@ public class GlobalStoresServerResource extends SelfInjectingServerResource {
             List<Document> resultList = result.getList();
             if(!resultList.isEmpty()){
                 for (Document doc : result.getList()){
-                    Long docId = doc.getId();
-                    String docType = doc.getKind();
-                    Map properties = doc.getFields();
-                    DocumentDreamcodeResponse newDoc = new DocumentDreamcodeResponse();
-                    newDoc.setId(String.valueOf(docId));
-                    newDoc.setType(docType);
-                    newDoc.put("propertyMap", properties);
-                    newDoc.put("metadata", null);
-                    entities.add(newDoc);
-                    count++;
+                    if(doc != null){
+                        LOG.info("Enity="+doc.toString());
+                        if(response == null){
+                            response = new LinkedList<>();
+                        }
+                        EntityDTO entityDTO = EntityDTO.createFrom(doc);
+                        response.add(entityDTO);
+                        count++;
+                    }
                 }
-                hasNext = true;
-            } else {
-                hasNext = false;
             }
-            response.put("entities", entities);
-            response.put("timestamp", new Date().getTime());
-            response.put("applicationName", ""); // TODO
-            CursorDreamcodeResponse cursorItem = new CursorDreamcodeResponse();
-            cursorItem.setPrev(prev);
-            cursorItem.setHasNext(hasNext);
-            cursorItem.setNext(nextCursor);
-            cursorItem.setTotal(count);
-            response.put("cursor", cursorItem);
             setStatus(Status.SUCCESS_OK);
         } catch (Exception e){
             e.printStackTrace();

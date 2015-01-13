@@ -19,17 +19,22 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.domain.rest;
+package com.textquo.dreamcode.server.resources;
 
-public class AppStatusDreamcodeResponse extends DreamcodeResponse {
-    public AppStatusDreamcodeResponse(){}
+import com.textquo.dreamcode.server.domain.rest.EntityDTO;
+import org.restlet.representation.Representation;
+import org.restlet.resource.Delete;
+import org.restlet.resource.Get;
+import org.restlet.resource.Post;
+import org.restlet.resource.Put;
 
-    public void setName(String name){
-        put("name", name);
-    }
+import java.util.List;
+import java.util.Map;
 
-    public void setVersion(String version){
-        put("version", version);
-    }
-
+public interface DataStoresResource extends BaseResource {
+    @Post("json")
+    public EntityDTO add(Representation entity);
+    @Get("json")
+    public List<EntityDTO> list(Representation entity);
 }
+

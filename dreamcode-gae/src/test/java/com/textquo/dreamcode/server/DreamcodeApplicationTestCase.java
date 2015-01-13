@@ -22,11 +22,10 @@
 package com.textquo.dreamcode.server;
 
 import com.github.restdriver.serverdriver.http.response.Response;
-import com.textquo.dreamcode.server.domain.rest.AppStatusDreamcodeResponse;
-import com.textquo.dreamcode.server.domain.rest.DocumentDreamcodeResponse;
-import com.textquo.dreamcode.server.domain.rest.DreamcodeResponse;
-import com.textquo.dreamcode.server.domain.rest.ErrorDreamcodeResponse;
 import com.textquo.dreamcode.server.guice.GuiceConfigModule;
+import com.textquo.dreamcode.server.resources.DataStoreResource;
+import com.textquo.dreamcode.server.resources.gae.GaeDataStoreServerResource;
+import com.textquo.dreamcode.server.resources.gae.GaeDataStoresServerResource;
 import com.textquo.dreamcode.server.resources.gae.PingServerResource;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -91,21 +90,17 @@ public class DreamcodeApplicationTestCase {
                 .addClass(com.textquo.dreamcode.server.DreamcodeApplication.class)
                 .addClass(com.textquo.dreamcode.server.domain.Document.class)
                 .addClass(com.textquo.dreamcode.server.domain.User.class)
-                .addClass(AppStatusDreamcodeResponse.class)
-                .addClass(DocumentDreamcodeResponse.class)
-                .addClass(ErrorDreamcodeResponse.class)
-                .addClass(DreamcodeResponse.class)
-                        // Resources
+                // Resources
                 .addClass(com.textquo.dreamcode.server.resources.gae.RootServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.gae.StatusServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.gae.PingServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.gae.GaeDummyServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.gae.GaeLinkingServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.gae.GaeTokenServerResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.gae.GlobalStoreServerResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.gae.GlobalStoresServerResource.class)
+                .addClass(GaeDataStoreServerResource.class)
+                .addClass(GaeDataStoresServerResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.BaseResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.GlobalStoreResource.class)
+                .addClass(DataStoreResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.UserResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.UsersResource.class)
                 .addClass(com.textquo.dreamcode.server.resources.LinkingResource.class)

@@ -74,7 +74,7 @@ public class GaeDocumentService implements DocumentService {
     @Override
     public void deleteDocument(String type, Long docId) throws DocumentException {
         Preconditions.checkNotNull(type, "String type is null");
-        Preconditions.checkArgument(type.isEmpty(), "String type is empty");
+        //Preconditions.checkArgument(type.isEmpty(), "String type is empty");
         Preconditions.checkNotNull(docId, "Document id is required");
         Document document = repository.read(type, docId);
         User user = userService.getLoggedInUser();
@@ -85,6 +85,7 @@ public class GaeDocumentService implements DocumentService {
                 throw new AccessNotAllowedException(String.valueOf(docId));
             }
         }
+        repository.delete(type, docId);
     }
 
     @Override
