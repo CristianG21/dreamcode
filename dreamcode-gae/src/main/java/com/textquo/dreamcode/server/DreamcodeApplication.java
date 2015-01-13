@@ -99,6 +99,7 @@ public class DreamcodeApplication extends Application {
     router.attach(ROOT_URI + "shares/{share_id}/{entity_id}", GaeDummyServerResource.class); // Add remove
     // Collections
     router.attach(ROOT_URI + "{collections}", GaeDataStoresServerResource.class);
+    router.attach(ROOT_URI + "{collections}/", GaeDataStoresServerResource.class);
     router.attach(ROOT_URI + "{collections}/{entity_id}", GaeDataStoreServerResource.class);
     router.attach(ROOT_URI + "{collections}/{entity_id}/", GaeDataStoreServerResource.class); // Keep this
     router.attach(ROOT_URI + "{collections}/{entity_id}?write_access_key=?{write_access_key}", GaeDataStoreServerResource.class);
