@@ -21,12 +21,28 @@
  */
 package com.textquo.dreamcode.server;
 
-import com.github.restdriver.serverdriver.http.response.Response;
+import com.jayway.restassured.response.ResponseBody;
+import com.textquo.dreamcode.server.DreamcodeApplication;
+import com.textquo.dreamcode.server.common.DreamcodeException;
+import com.textquo.dreamcode.server.domain.Document;
+import com.textquo.dreamcode.server.domain.User;
+import com.textquo.dreamcode.server.domain.rest.CursorDTO;
+import com.textquo.dreamcode.server.domain.rest.EntityDTO;
 import com.textquo.dreamcode.server.guice.GuiceConfigModule;
-import com.textquo.dreamcode.server.resources.DataStoreResource;
-import com.textquo.dreamcode.server.resources.gae.GaeDataStoreServerResource;
-import com.textquo.dreamcode.server.resources.gae.GaeDataStoresServerResource;
-import com.textquo.dreamcode.server.resources.gae.PingServerResource;
+import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
+import com.textquo.dreamcode.server.guice.SelfInjectingServerResourceModule;
+import com.textquo.dreamcode.server.repository.DocumentRepository;
+import com.textquo.dreamcode.server.repository.gae.GaeDocumentRepository;
+import com.textquo.dreamcode.server.resources.*;
+import com.textquo.dreamcode.server.resources.gae.*;
+import com.textquo.dreamcode.server.services.DocumentService;
+import com.textquo.dreamcode.server.services.ShardedCounter;
+import com.textquo.dreamcode.server.services.ShardedCounterService;
+import com.textquo.dreamcode.server.services.UserService;
+import com.textquo.dreamcode.server.services.common.AccessNotAllowedException;
+import com.textquo.dreamcode.server.services.common.DocumentException;
+import com.textquo.dreamcode.server.services.gae.GaeDocumentService;
+import com.textquo.dreamcode.server.services.gae.GaeUserService;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -42,8 +58,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
-import static com.github.restdriver.serverdriver.RestServerDriver.*;
-import static com.github.restdriver.serverdriver.Matchers.*;
+import static com.jayway.restassured.RestAssured.*;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -87,41 +103,44 @@ public class DreamcodeApplicationTestCase {
                 .addAsLibraries(sdkFile)
                 .addClass(org.restlet.ext.servlet.ServerServlet.class)
                 // Domain Models
-                .addClass(com.textquo.dreamcode.server.DreamcodeApplication.class)
-                .addClass(com.textquo.dreamcode.server.domain.Document.class)
-                .addClass(com.textquo.dreamcode.server.domain.User.class)
+                .addClass(DreamcodeApplication.class)
+                .addClass(CursorDTO.class)
+                .addClass(EntityDTO.class)
+                .addClass(Document.class)
+                .addClass(User.class)
                 // Resources
-                .addClass(com.textquo.dreamcode.server.resources.gae.RootServerResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.gae.StatusServerResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.gae.PingServerResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.gae.GaeDummyServerResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.gae.GaeLinkingServerResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.gae.GaeTokenServerResource.class)
+                .addClass(DataStoresResource.class)
+                .addClass(RootServerResource.class)
+                .addClass(StatusServerResource.class)
+                .addClass(PingServerResource.class)
+                .addClass(GaeDummyServerResource.class)
+                .addClass(GaeLinkingServerResource.class)
+                .addClass(GaeTokenServerResource.class)
                 .addClass(GaeDataStoreServerResource.class)
                 .addClass(GaeDataStoresServerResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.BaseResource.class)
+                .addClass(BaseResource.class)
                 .addClass(DataStoreResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.UserResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.UsersResource.class)
-                .addClass(com.textquo.dreamcode.server.resources.LinkingResource.class)
+                .addClass(UserResource.class)
+                .addClass(UsersResource.class)
+                .addClass(LinkingResource.class)
                 // Services
-                .addClass(com.textquo.dreamcode.server.services.UserService.class)
-                .addClass(com.textquo.dreamcode.server.services.gae.GaeUserService.class)
-                .addClass(com.textquo.dreamcode.server.services.ShardedCounter.class)
-                .addClass(com.textquo.dreamcode.server.services.ShardedCounterService.class)
-                .addClass(com.textquo.dreamcode.server.services.DocumentService.class)
-                .addClass(com.textquo.dreamcode.server.services.gae.GaeDocumentService.class)
+                .addClass(UserService.class)
+                .addClass(GaeUserService.class)
+                .addClass(ShardedCounter.class)
+                .addClass(ShardedCounterService.class)
+                .addClass(DocumentService.class)
+                .addClass(GaeDocumentService.class)
                 // Repositories
-                .addClass(com.textquo.dreamcode.server.repository.DocumentRepository.class)
-                .addClass(com.textquo.dreamcode.server.repository.gae.GaeDocumentRepository.class)
-                .addClass(com.textquo.dreamcode.server.guice.SelfInjectingServerResource.class)
-                .addClass(com.textquo.dreamcode.server.guice.SelfInjectingServerResourceModule.class)
-                .addClass(com.textquo.dreamcode.server.guice.GuiceConfigModule.class)
+                .addClass(DocumentRepository.class)
+                .addClass(GaeDocumentRepository.class)
+                .addClass(SelfInjectingServerResource.class)
+                .addClass(SelfInjectingServerResourceModule.class)
+                .addClass(GuiceConfigModule.class)
                         // Exceptions
-                .addClass(com.textquo.dreamcode.server.common.DreamcodeException.class)
-                .addClass(com.textquo.dreamcode.server.services.common.DocumentException.class)
-                .addClass(com.textquo.dreamcode.server.services.common.AccessNotAllowedException.class)
-                .addClass(com.textquo.dreamcode.server.JSONHelper.class)
+                .addClass(DreamcodeException.class)
+                .addClass(DocumentException.class)
+                .addClass(AccessNotAllowedException.class)
+                .addClass(JSONHelper.class)
 
                 .setWebXML("web.xml")
                 .addAsWebInfResource("appengine-web.xml")
@@ -131,42 +150,29 @@ public class DreamcodeApplicationTestCase {
     @Test
     @OperateOnDeployment("default")
     public void shouldBeAbleToInvokeServletInDeployedWebApp() throws Exception {
-        String body = readAllAndClose(new URL("http://localhost:8080/ping").openStream());
-        assertEquals(
-                "Verify that the servlet was deployed and returns expected result",
-                PingServerResource.PONG,
-                body);
-        Response response = get("http://localhost:8080/ping", body("", "application/json"));
-        assertThat(response, hasStatusCode(200));
-        assertThat(response, hasResponseBody(is(PingServerResource.PONG)));
-
+        get("http://localhost:8080/rest/ping")
+                .then()
+                .assertThat()
+                .body(containsString(PingServerResource.PONG));
     }
 
     @Test
     @OperateOnDeployment("default")
     public void shouldBeAbleToAddEntityAndReadIt() throws Exception {
-        String toSave = "{ \"content\" : \"sample content\" }";
-        Response postResponse = post("http://localhost:8080/test", body(toSave, "application/json"));
-        Response getResponse = get("http://localhost:8080/test", body("", "application/json"));
+        String content = "{ \"content\" : \"sample content\" }";
 
-        assertThat(postResponse, hasStatusCode(200));
-        assertThat(getResponse, hasStatusCode(200));
-        assertThat(getResponse.asJson(), hasJsonPath("count", equalTo(1)));
+        ResponseBody r = expect()
+                .body("_id", equalTo(1))
+                .body("content", equalTo("sample content"))
+                .statusCode(200)
+                .given().contentType("application/json")
+                .body(content)
+                .when()
+                .post("http://localhost:8080/rest/test")
+                .getBody();
+
+        System.out.println(r.prettyPrint());
+
     }
 
-    private String readAllAndClose(InputStream is) throws Exception {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            int read;
-            while ((read = is.read()) != -1) {
-                out.write(read);
-            }
-        } finally {
-            try {
-                is.close();
-            } catch (Exception ignored) {
-            }
-        }
-        return out.toString();
-    }
 }

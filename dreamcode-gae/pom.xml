@@ -90,11 +90,11 @@
 			<artifactId>boon</artifactId>
 			<version>0.30</version>
 		</dependency>
+		<!-- Twist Object Mapping -->
 		<dependency>
 			<groupId>com.textquo</groupId>
 			<artifactId>twist</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
 		</dependency>
 		<!-- Testing -->
 		<dependency>
@@ -109,11 +109,17 @@
 			<version>${version.appengine}</version>
 			<scope>test</scope>
 		</dependency>
+		<!--- TO BE REPLACED BY REST-ASSURED -->
 		<dependency>
 			<groupId>com.github.rest-driver</groupId>
 			<artifactId>rest-server-driver</artifactId>
 			<version>1.1.33</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>2.4.0</version>
 		</dependency>
 		<!-- Arquillian Testing -->
 		<dependency>
