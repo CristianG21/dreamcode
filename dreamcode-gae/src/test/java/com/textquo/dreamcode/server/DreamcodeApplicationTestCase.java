@@ -102,13 +102,11 @@ public class DreamcodeApplicationTestCase {
                 .addAsLibraries(file)
                 .addAsLibraries(sdkFile)
                 .addClass(org.restlet.ext.servlet.ServerServlet.class)
-                // Domain Models
                 .addClass(DreamcodeApplication.class)
                 .addClass(CursorDTO.class)
                 .addClass(EntityDTO.class)
                 .addClass(Document.class)
                 .addClass(User.class)
-                // Resources
                 .addClass(DataStoresResource.class)
                 .addClass(RootServerResource.class)
                 .addClass(StatusServerResource.class)
@@ -118,30 +116,26 @@ public class DreamcodeApplicationTestCase {
                 .addClass(GaeTokenServerResource.class)
                 .addClass(GaeDataStoreServerResource.class)
                 .addClass(GaeDataStoresServerResource.class)
+                .addClass(SelfInjectingServerResource.class)
+                .addClass(SelfInjectingServerResourceModule.class)
+                .addClass(GuiceConfigModule.class)
                 .addClass(BaseResource.class)
                 .addClass(DataStoreResource.class)
                 .addClass(UserResource.class)
                 .addClass(UsersResource.class)
                 .addClass(LinkingResource.class)
-                // Services
                 .addClass(UserService.class)
                 .addClass(GaeUserService.class)
                 .addClass(ShardedCounter.class)
                 .addClass(ShardedCounterService.class)
                 .addClass(DocumentService.class)
                 .addClass(GaeDocumentService.class)
-                // Repositories
                 .addClass(DocumentRepository.class)
                 .addClass(GaeDocumentRepository.class)
-                .addClass(SelfInjectingServerResource.class)
-                .addClass(SelfInjectingServerResourceModule.class)
-                .addClass(GuiceConfigModule.class)
-                        // Exceptions
                 .addClass(DreamcodeException.class)
                 .addClass(DocumentException.class)
                 .addClass(AccessNotAllowedException.class)
                 .addClass(JSONHelper.class)
-
                 .setWebXML("web.xml")
                 .addAsWebInfResource("appengine-web.xml")
                 .addAsWebInfResource("logging.properties");
