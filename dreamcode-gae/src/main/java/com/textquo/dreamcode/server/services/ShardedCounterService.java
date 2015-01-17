@@ -1,5 +1,7 @@
 package com.textquo.dreamcode.server.services;
 
+import com.textquo.dreamcode.server.services.util.ShardedCounter;
+
 public class ShardedCounterService {
 
     private ShardedCounter counter;

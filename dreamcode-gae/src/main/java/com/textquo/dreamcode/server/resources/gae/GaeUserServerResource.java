@@ -1,5 +1,6 @@
 package com.textquo.dreamcode.server.resources.gae;
 
+import com.textquo.dreamcode.server.domain.rest.EntityDTO;
 import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
 import com.textquo.dreamcode.server.resources.UserResource;
 import org.restlet.representation.Representation;

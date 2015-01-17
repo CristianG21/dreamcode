@@ -19,13 +19,9 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.resources;
+package com.textquo.dreamcode.server.customcode;
 
-import com.textquo.dreamcode.server.domain.rest.EntityDTO;
-import org.restlet.representation.Representation;
-import org.restlet.resource.*;
-
-public interface BaseResource {
-    @Options
-    public void doOptions(Representation entity);
+public interface CustomCodeCallback {
+    public void success(Object response);
+    public void failure(Object response, Throwable t);
 }

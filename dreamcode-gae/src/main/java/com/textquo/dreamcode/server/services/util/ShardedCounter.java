@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-package com.textquo.dreamcode.server.services;
+package com.textquo.dreamcode.server.services.util;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;

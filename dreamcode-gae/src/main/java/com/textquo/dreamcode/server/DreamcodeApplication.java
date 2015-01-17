@@ -97,6 +97,10 @@ public class DreamcodeApplication extends Application {
     router.attach(ROOT_URI + "shares/{share_id}", GaeDummyServerResource.class);
     router.attach(ROOT_URI + "shares/{share_id}/accesses/{user_id}?access={access_type}", GaeDummyServerResource.class); // Access types: read, write, read_write
     router.attach(ROOT_URI + "shares/{share_id}/{entity_id}", GaeDummyServerResource.class); // Add remove
+
+    router.attach(ROOT_URI + "customcodes", GaeCustomCodeServerResource.class);
+    router.attach(ROOT_URI + "customcodes/{custom_code_id}", GaeCustomCodeServerResource.class);
+
     // Collections
     router.attach(ROOT_URI + "{collections}", GaeDataStoresServerResource.class);
     router.attach(ROOT_URI + "{collections}/", GaeDataStoresServerResource.class);

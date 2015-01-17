@@ -23,9 +23,19 @@ package com.textquo.dreamcode.server.resources;
 
 import com.textquo.dreamcode.server.domain.rest.EntityDTO;
 import org.restlet.representation.Representation;
-import org.restlet.resource.*;
+import org.restlet.resource.Delete;
+import org.restlet.resource.Get;
+import org.restlet.resource.Post;
+import org.restlet.resource.Put;
 
-public interface BaseResource {
-    @Options
-    public void doOptions(Representation entity);
+public interface CustomCodeResource extends BaseResource {
+    @Post("json")
+    public EntityDTO add(Representation entity);
+    @Put("json")
+    public EntityDTO update(Representation entity);
+    @Get("json")
+    public EntityDTO run(Representation entity);
+    @Delete("json")
+    public void remove(Representation entity);
+
 }

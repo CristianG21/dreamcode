@@ -6,6 +6,7 @@ import com.textquo.dreamcode.server.services.common.DocumentException;
 import java.util.Collection;
 import java.util.Map;
 
+@Deprecated
 public interface DocumentService {
     public Document createDocument(Document document);
     public Document readDocument(String type, Long docId) throws DocumentException;

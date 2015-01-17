@@ -22,7 +22,6 @@
 package com.textquo.dreamcode.server;
 
 import com.jayway.restassured.response.ResponseBody;
-import com.textquo.dreamcode.server.DreamcodeApplication;
 import com.textquo.dreamcode.server.common.DreamcodeException;
 import com.textquo.dreamcode.server.domain.Document;
 import com.textquo.dreamcode.server.domain.User;
@@ -36,7 +35,7 @@ import com.textquo.dreamcode.server.repository.gae.GaeDocumentRepository;
 import com.textquo.dreamcode.server.resources.*;
 import com.textquo.dreamcode.server.resources.gae.*;
 import com.textquo.dreamcode.server.services.DocumentService;
-import com.textquo.dreamcode.server.services.ShardedCounter;
+import com.textquo.dreamcode.server.services.util.ShardedCounter;
 import com.textquo.dreamcode.server.services.ShardedCounterService;
 import com.textquo.dreamcode.server.services.UserService;
 import com.textquo.dreamcode.server.services.common.AccessNotAllowedException;
@@ -53,16 +52,13 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
 
 import static com.jayway.restassured.RestAssured.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

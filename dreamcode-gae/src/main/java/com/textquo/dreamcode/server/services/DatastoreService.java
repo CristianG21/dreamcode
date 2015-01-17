@@ -21,7 +21,9 @@
  */
 package com.textquo.dreamcode.server.services;
 
-public interface DreamcodeStore {
-    public void add(String type, String jsonObject);
-    public void update(String type, String id, String jsonObject);
+public interface DatastoreService {
+    public void put(Object obj);
+    public <T> T get(Long id);
+    public void update(Object obj);
+    public <T> T delete(Long id);
 }

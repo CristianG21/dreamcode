@@ -128,7 +128,7 @@ public class GaeDataStoreServerResource extends SelfInjectingServerResource
     @Override
     public EntityDTO update(Representation entity){
         return add(entity);
-    };
+    }
 
     @Override
     public EntityDTO find(){

@@ -19,13 +19,14 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.resources;
+package com.textquo.dreamcode.server.services;
 
-import com.textquo.dreamcode.server.domain.rest.EntityDTO;
-import org.restlet.representation.Representation;
-import org.restlet.resource.*;
+import com.textquo.dreamcode.server.customcode.CustomCode;
+import com.textquo.dreamcode.server.customcode.CustomCodeCallback;
 
-public interface BaseResource {
-    @Options
-    public void doOptions(Representation entity);
+public interface CustomCodeService {
+    public void addCustomCode(String name, CustomCode customCode);
+    public void updateCustomCode(String name, CustomCode customCode);
+    public void runCustomCode(String name, Object data, CustomCodeCallback callback);
+    public void deleteCustomCode(String name);
 }

@@ -19,13 +19,34 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.resources;
+package com.textquo.dreamcode.server.services.gae;
 
-import com.textquo.dreamcode.server.domain.rest.EntityDTO;
-import org.restlet.representation.Representation;
-import org.restlet.resource.*;
+import com.textquo.dreamcode.server.services.DatastoreService;
 
-public interface BaseResource {
-    @Options
-    public void doOptions(Representation entity);
+import static com.textquo.twist.ObjectStoreService.store;
+
+public class GaeDatastoreService implements DatastoreService {
+    @Override
+    public void put(Object obj) {
+        store().put(obj);
+    }
+
+    @Override
+    public <T> T get(Long id) {
+        T obj = null;
+        obj = (T) store().get(obj.getClass(), id);
+        return obj;
+    }
+
+    @Override
+    public void update(Object obj) {
+        store().put(obj);
+    }
+
+    @Override
+    public <T> T delete(Long id) {
+        T obj = null;
+        store().delete(obj.getClass(), id);
+        return null;
+    }
 }

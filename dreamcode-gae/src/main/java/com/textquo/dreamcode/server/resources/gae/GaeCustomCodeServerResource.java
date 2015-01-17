@@ -19,13 +19,37 @@
  * |_____|__| |_____|___._|__|__|__|____|_____|_____|_____|
  *
  */
-package com.textquo.dreamcode.server.resources;
+package com.textquo.dreamcode.server.resources.gae;
 
 import com.textquo.dreamcode.server.domain.rest.EntityDTO;
+import com.textquo.dreamcode.server.guice.SelfInjectingServerResource;
+import com.textquo.dreamcode.server.resources.CustomCodeResource;
 import org.restlet.representation.Representation;
-import org.restlet.resource.*;
 
-public interface BaseResource {
-    @Options
-    public void doOptions(Representation entity);
+public class GaeCustomCodeServerResource extends SelfInjectingServerResource
+    implements CustomCodeResource {
+
+    public void doOptions(Representation entity) {
+
+    }
+
+    @Override
+    public EntityDTO add(Representation entity) {
+        return null;
+    }
+
+    @Override
+    public EntityDTO update(Representation entity) {
+        return null;
+    }
+
+    @Override
+    public EntityDTO run(Representation entity) {
+        return null;
+    }
+
+    @Override
+    public void remove(Representation entity) {
+
+    }
 }
